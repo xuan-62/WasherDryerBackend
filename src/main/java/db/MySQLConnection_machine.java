@@ -10,6 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import entity.Item;
+import entity.Item.ItemBuilder;
+
 public class MySQLConnection_machine {
 	private Connection conn;
 
@@ -23,41 +26,34 @@ public class MySQLConnection_machine {
 		}
 	}
 
-	// TODO
-	/*
-	 * public void setcondition() { if (conn == null) {
-	 * System.err.println("DB connection failed"); return; }
-	 * 
-	 * }
-	 */
-
-	public List<String> getAllMachine() {
+	public Set<Item> getAllMachine() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return null;
 		}
-		/*
-		 * Set<Item> reservedItems = new HashSet<>(); Set<String> reservationIDs =
-		 * getReservationIDs(userId);
-		 * 
-		 * String sql = "SELECT * FROM items; 
-		 * try { 
-		 * PreparedStatement statement = conn.prepareStatement(sql); 
-		 * ResultSet rs = statement.executeQuery();
-		 * ItemBuilder builder = new ItemBuilder(); if (rs.next()) {
-		 * builder.setItemId(rs.getString("item_id"));
-		 * builder.setName(rs.getString("type"));
-		 * builder.setAddress(rs.getString("address"));
-		 * builder.setImageUrl(rs.getString("user_id"));
-		 * builder.setUrl(rs.getString("item_condition"));
-		 * builder.setKeywords(getKeywords(model)); reservedItems.add(builder.build());
-		 * } } catch (SQLException e) { e.printStackTrace(); } return Items;
-		 */
 
-		return new ArrayList<String>();
+		Set<Item> Items = new HashSet<>();
+		String sql = "SELECT * FROM item";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			ItemBuilder builder = new ItemBuilder();
+			while (rs.next()) {
+				builder.setItemId(rs.getString("item_id"));
+				builder.setType(rs.getString("type"));
+				builder.setAddress(rs.getString("address"));
+				builder.setUserId(rs.getString("user_id"));
+				builder.setCondition(rs.getString("item_condition"));
+				builder.setModel(rs.getString("model"));
+				Items.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return Items;
 	}
 
-	public void addMachine(String item_id, String type, String address, String user_id, String item_condition,
+	public void addMachine(String item_id, String type, String address, String item_condition,
 			String model) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -69,7 +65,6 @@ public class MySQLConnection_machine {
 			statement.setString(1, item_id);
 			statement.setString(2, type);
 			statement.setString(3, address);
-			//statement.setString(4, user_id);
 			statement.setString(4, item_condition);
 			statement.setString(5, model);
 			statement.executeUpdate();
@@ -77,6 +72,39 @@ public class MySQLConnection_machine {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void addUsertoItem(String item_id, String user_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+
+		String sql = "UPDATE item SET user_id=? WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, user_id);
+			statement.setString(2, item_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeUserfromItem(String item_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+
+		String sql = "UPDATE item SET user_id = NULL WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, item_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setReservation(String user_id, String item_id) {
@@ -135,25 +163,38 @@ public class MySQLConnection_machine {
 		return Reservations;
 	}
 
-	/*
-	 * public Set<Item> getReservedItems(String userId) { if (conn == null) {
-	 * System.err.println("DB connection failed"); return new HashSet<>(); }
-	 * Set<Item> reservedItems = new HashSet<>(); Set<String> reservationIDs =
-	 * getReservationIDs(userId);
-	 * 
-	 * String sql = "SELECT * FROM items WHERE item_id = ?"; try { PreparedStatement
-	 * statement = conn.prepareStatement(sql); for (String itemId : reservationIDs)
-	 * { statement.setString(1, itemId); ResultSet rs = statement.executeQuery();
-	 * 
-	 * ItemBuilder builder = new ItemBuilder(); if (rs.next()) {
-	 * builder.setItemId(rs.getString("item_id"));
-	 * builder.setName(rs.getString("type"));
-	 * builder.setAddress(rs.getString("address"));
-	 * builder.setImageUrl(rs.getString("user_id"));
-	 * builder.setUrl(rs.getString("item_condition"));
-	 * builder.setKeywords(getKeywords(model)); reservedItems.add(builder.build());
-	 * } } } catch (SQLException e) { e.printStackTrace(); } return reservedItems; }
-	 */
+	public Set<Item> getReservedItems(String userId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashSet<>();
+		}
+		Set<Item> reservedItems = new HashSet<>();
+		Set<String> itemIDs = getReservationIDs(userId);
+
+		String sql = "SELECT * FROM item WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			for (String itemId : itemIDs) {
+				statement.setString(1, itemId);
+				ResultSet rs = statement.executeQuery();
+
+				ItemBuilder builder = new ItemBuilder();
+				if (rs.next()) {
+					builder.setItemId(rs.getString("item_id"));
+					builder.setType(rs.getString("type"));
+					builder.setAddress(rs.getString("address"));
+					builder.setUserId(rs.getString("user_id"));
+					builder.setCondition(rs.getString("item_condition"));
+					builder.setModel(rs.getString("model"));
+					reservedItems.add(builder.build());
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return reservedItems;
+	}
+
 	public void close() {
 		if (conn != null) {
 			try {

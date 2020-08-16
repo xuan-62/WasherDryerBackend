@@ -26,11 +26,12 @@ public class MySQLTableCreation {
 			sql = "DROP TABLE IF EXISTS item";
 			statement.executeUpdate(sql);
 			
+			sql = "DROP TABLE IF EXISTS background";
+			statement.executeUpdate(sql);
+			
 			sql = "DROP TABLE IF EXISTS user";
 			statement.executeUpdate(sql);
 			
-			sql = "DROP TABLE IF EXISTS background";
-			statement.executeUpdate(sql);
 
 			sql = "CREATE TABLE user ("
 					+ "user_id VARCHAR(255) NOT NULL,"
@@ -68,7 +69,7 @@ public class MySQLTableCreation {
 					+ "item_id VARCHAR(255) NOT NULL,"
 					+ "start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
 					+ "end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-					+ "PRIMARY KEY (user_id),"
+					+ "PRIMARY KEY (user_id, item_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES user(user_id),"
 					+ "FOREIGN KEY (item_id) REFERENCES item(item_id)"
 					+ ")";

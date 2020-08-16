@@ -7,7 +7,7 @@ import entity.Item;
 
 public class test {
 	public static void main(String[] args) {
-		MySQLConnection_machine connection = new MySQLConnection_machine();
+		MySQLConnection connection = new MySQLConnection();
 		connection.addMachine("W001", "typeA", "USA", "empty", "A");
 		connection.addMachine("W002", "typeB", "USB", "empty", "B");
 		//connection.reserveUser("W001", "1112");

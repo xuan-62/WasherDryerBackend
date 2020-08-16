@@ -59,6 +59,7 @@ public class MySQLTableCreation {
 					+ "user_id VARCHAR(255),"
 					+ "item_condition VARCHAR(255),"
 					+ "model VARCHAR(255),"
+					+ "brand VARCHAR(255),"
 					+ "PRIMARY KEY (item_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES user(user_id)"
 					+ ")";

@@ -8,8 +8,8 @@ import entity.Item;
 public class test {
 	public static void main(String[] args) {
 		MySQLConnection connection = new MySQLConnection();
-		connection.addMachine("W001", "typeA", "USA", "empty", "A");
-		connection.addMachine("W002", "typeB", "USB", "empty", "B");
+		connection.addMachine("W001", "typeA", "USA", "empty", "A", "TCL");
+		connection.addMachine("W002", "typeB", "USB", "empty", "B", "TCL");
 		//connection.reserveUser("W001", "1112");
 		//connection.setReservation("1112", "W001");
 		

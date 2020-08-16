@@ -120,12 +120,12 @@ public class MySQLConnection {
 	
 	//Xianli Shen
 	public void addMachine(String item_id, String type, String address, String item_condition,
-			String model) {
+			String model, String brand) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return;
 		}
-		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model) VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model, brand) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, item_id);
@@ -133,6 +133,7 @@ public class MySQLConnection {
 			statement.setString(3, address);
 			statement.setString(4, item_condition);
 			statement.setString(5, model);
+			statement.setString(6, brand);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

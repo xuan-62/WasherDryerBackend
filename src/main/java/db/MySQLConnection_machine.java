@@ -63,15 +63,15 @@ public class MySQLConnection_machine {
 			System.err.println("DB connection failed");
 			return;
 		}
-		String sql = "INSERT IGNORE INTO item (item_id, type, address, user_id, item_condition, model) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model) VALUES (?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, item_id);
 			statement.setString(2, type);
 			statement.setString(3, address);
-			statement.setString(4, user_id);
-			statement.setString(5, item_condition);
-			statement.setString(6, model);
+			//statement.setString(4, user_id);
+			statement.setString(4, item_condition);
+			statement.setString(5, model);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

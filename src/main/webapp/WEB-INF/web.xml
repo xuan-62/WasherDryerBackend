@@ -28,6 +28,12 @@
   	<description></description>
   	<servlet-class>user.Logout</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>ChangeMachineStatus1</servlet-name>
+  	<display-name>ChangeMachineStatus1</display-name>
+  	<description></description>
+  	<servlet-class>rpc.ChangeMachineStatus1</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>Test</servlet-name>
   	<url-pattern>/test</url-pattern>
@@ -43,5 +49,15 @@
   <servlet-mapping>
   	<servlet-name>Logout</servlet-name>
   	<url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<url-pattern>/getAllMachines</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<url-pattern>/sendingMessageToManager</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ChangeMachineStatus1</servlet-name>
+  	<url-pattern>/ChangeMachineStatus1</url-pattern>
   </servlet-mapping>
 </web-app>

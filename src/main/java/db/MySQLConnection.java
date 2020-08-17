@@ -132,8 +132,7 @@ public class MySQLConnection {
 	}
 	
 	//Xianli Shen
-	public void addMachine(String item_id, String type, String address, String item_condition,
-			String model, String brand) {
+	public void addMachine(Item item) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return;
@@ -141,12 +140,12 @@ public class MySQLConnection {
 		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model, brand) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, item_id);
-			statement.setString(2, type);
-			statement.setString(3, address);
-			statement.setString(4, item_condition);
-			statement.setString(5, model);
-			statement.setString(6, brand);
+			statement.setString(1, item.getItemId());
+			statement.setString(2, item.getType());
+			statement.setString(3, item.getAddress());
+			statement.setString(4, item.getCondition());
+			statement.setString(5, item.getModel());
+			statement.setString(6, item.getBrand());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -42,6 +42,12 @@
   	<servlet-name>SendingMessageToManager</servlet-name>
   	<servlet-class>rpc.SendingMessageToManager</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>AddMachine</servlet-name>
+  	<display-name>AddMachine</display-name>
+  	<description></description>
+  	<servlet-class>rpc.AddMachine</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>Test</servlet-name>
   	<url-pattern>/test</url-pattern>
@@ -69,5 +75,9 @@
   <servlet-mapping>
   	<servlet-name>ChangeMachineStatus</servlet-name>
   	<url-pattern>/changeMachineStatus</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>AddMachine</servlet-name>
+  	<url-pattern>/addMachine</url-pattern>
   </servlet-mapping>
 </web-app>

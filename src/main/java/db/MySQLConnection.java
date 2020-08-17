@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.mysql.cj.xdevapi.Statement;
-
 import entity.Item;
 import entity.Item.ItemBuilder;
 

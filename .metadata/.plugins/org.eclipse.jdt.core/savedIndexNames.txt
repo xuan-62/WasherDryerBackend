@@ -1,0 +1,18 @@
+INDEX VERSION 1.131+F:\Summer\Washer\.metadata\.plugins\org.eclipse.jdt.core
+427808202.index
+1618924148.index
+1386423585.index
+1835737316.index
+1103656155.index
+3280125045.index
+730959045.index
+3637467130.index
+2193686204.index
+2959209452.index
+1017372412.index
+2168687353.index
+2848328504.index
+3821178196.index
+2836838699.index
+1996593478.index
+383259340.index

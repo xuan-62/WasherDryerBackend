@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+F:\Summer\Washer\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3410692338.index
+476887340.index
+1386423585.index
+569444717.index
+1659351351.index
+546227696.index

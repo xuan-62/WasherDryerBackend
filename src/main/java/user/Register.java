@@ -1,6 +1,9 @@
 package user;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+
+import com.mysql.cj.xdevapi.Statement;
 
 import db.MySQLConnection;
 import rpc.RpcHelper;
@@ -37,14 +42,12 @@ public class Register extends HttpServlet {
 		// TODO Auto-generated method stub
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String userId = input.getString("user_id");
-		//String firstname = input.getString("first_name");
-		//String lastname = input.getString("last_name");
 		String phonenumber = input.getString("phone_number");
 		String password = input.getString("password");
 
 		MySQLConnection connection = new MySQLConnection();
 		JSONObject obj = new JSONObject();
-		if (connection.addUser(userId, password, phonenumber)) {
+		if (connection.addUser(userId, phonenumber, password)) {
 			obj.put("status", "OK");
 		} else {
 			obj.put("status", "User Already Exists");

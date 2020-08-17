@@ -37,7 +37,7 @@ public class Login extends HttpServlet {
 		if (session != null) {
 			MySQLConnection connection = new MySQLConnection();
 			String userId = session.getAttribute("user_id").toString();
-			obj.put("status", "OK").put("user_id", userId).put("name", connection.getFullname(userId));
+			obj.put("status", "OK").put("user_id", userId).put("phone_number", connection.getFullname(userId));
 			connection.close();
 		} else {
 			obj.put("status", "Invalid Session");

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.mysql.cj.xdevapi.Statement;
+
 import entity.Item;
 import entity.Item.ItemBuilder;
 
@@ -31,13 +33,13 @@ public class MySQLConnection {
 			return "";
 		}
 		String name = "";
-		String sql = "SELECT first_name, last_name FROM users WHERE user_id = ? ";
+		String sql = "select phone_number FROM user WHERE user_id = ? ";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				name = rs.getString("first_name") + " " + rs.getString("last_name");
+				name = rs.getString("phone_number");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -51,7 +53,7 @@ public class MySQLConnection {
 			System.err.println("DB connection failed");
 			return false;
 		}
-		String sql = "SELECT user_id FROM users WHERE user_id = ? AND password = ?";
+		String sql = "SELECT user_id FROM user WHERE user_id = ? AND password = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
@@ -66,21 +68,35 @@ public class MySQLConnection {
 		return false;
 	}
 	//Donghao Feng
-	public boolean addUser(String userId, String password, String phoneNumber) {
+	public boolean addUser(String userId, String phoneNumber, String password) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
-
-		String sql = "INSERT INTO user VALUES (?, ?, ?)";
+		
+		String sql = "SELECT * FROM user WHERE user_id = ? AND phone_number = ?";
+		PreparedStatement preparedStatement;
 		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, userId);
+			preparedStatement.setString(2, phoneNumber);
+			ResultSet rs =preparedStatement.executeQuery();
+			if (rs.next()) {
+				return false;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String sql2 = "insert ignore INTO user VALUES (?, ?, ?)";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql2);
 			statement.setString(1, userId);
 			statement.setString(2, phoneNumber);
 			statement.setString(3, password);
 			statement.executeUpdate();
-
-			return statement.executeUpdate() == 1;
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

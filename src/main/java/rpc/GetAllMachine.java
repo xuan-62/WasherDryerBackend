@@ -45,7 +45,6 @@ public class GetAllMachine extends HttpServlet {
 		}
 		
 		RpcHelper.writeJsonArray(response, array);
-		RpcHelper.writeJsonArray(response, array);
 	}
 
 	/**

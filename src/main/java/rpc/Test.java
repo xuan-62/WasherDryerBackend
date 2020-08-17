@@ -42,38 +42,6 @@ public class Test extends HttpServlet {
 		//RpcHelper.writeJsonObject(response, obj);
 		
 		
-		//String to = "bruceshenqqeq@gmail.com";
-		//String subject = "test mail";
-		//String text = "a text mail without html";
-		
-		
-		//SendEmail.sendtext(to, subject, text);
-
-		SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        try {
-			Scheduler scheduler = schedulerFactory.getScheduler();
-			JobDetail jobDetail = JobBuilder.newJob(SendEmail.class)
-	                .withIdentity("job1", "group1").build();
-	        
-	        jobDetail.getJobDataMap().put("to", "bruceshenqqeq@gmail.com");
-	        jobDetail.getJobDataMap().put("subject", "test mail");
-	        jobDetail.getJobDataMap().put("text", "a mail with timer");
-			
-	        Date startDate = new Date();
-	        startDate.setTime((long) (startDate.getTime() + (0.5*60*1000)));
-	        
-	        Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "triggerGroup1")
-	                .startAt(startDate)
-	        		.build();
-
-	        scheduler.scheduleJob(jobDetail, trigger);
-	        System.out.println("--------scheduler start ! ------------");
-	        scheduler.start();
-		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-           
 	}
 
 	/**

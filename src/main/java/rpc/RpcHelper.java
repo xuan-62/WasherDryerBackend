@@ -21,5 +21,4 @@ public class RpcHelper {
 			response.getWriter().print(obj);
 
 		}
-
 }

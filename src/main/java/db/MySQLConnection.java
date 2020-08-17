@@ -122,6 +122,7 @@ public class MySQLConnection {
 				builder.setUserId(rs.getString("user_id"));
 				builder.setCondition(rs.getString("item_condition"));
 				builder.setModel(rs.getString("model"));
+				builder.setBrand(rs.getString("Brand"));
 				Items.add(builder.build());
 			}
 		} catch (SQLException e) {
@@ -271,6 +272,7 @@ public class MySQLConnection {
 					builder.setUserId(rs.getString("user_id"));
 					builder.setCondition(rs.getString("item_condition"));
 					builder.setModel(rs.getString("model"));
+					builder.setBrand(rs.getString("brand"));
 					reservedItems.add(builder.build());
 				}
 			}

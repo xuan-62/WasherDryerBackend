@@ -70,7 +70,7 @@
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>SendingMessageToManager</servlet-name>
-  	<url-pattern>/sendingMessageToManager</url-pattern>
+  	<url-pattern>/report</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>ChangeMachineStatus</servlet-name>

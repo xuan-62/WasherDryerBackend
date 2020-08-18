@@ -40,19 +40,22 @@ public class ChangeMachineStatus extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//String newStatus = request
-		
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String newStatus = input.getString("status");
 		String item_id = input.getString("item_id");
 		MySQLConnection connection = new MySQLConnection();
-		HttpSession session = request.getSession();
 		String user_id = session.getAttribute("user_id").toString();
 		//String user_id = "1111";
 		if(newStatus.equals("reserve")) {
 			connection.updateCondition(item_id, newStatus);
 			connection.addUsertoItem(item_id, user_id);
 			connection.setReservation(user_id, item_id);
-		}else if(newStatus.equals("available")) {
+		}else if(newStatus.equals("available")) { 
 			connection.updateCondition(item_id, newStatus);
 			connection.removeReservation(user_id, item_id);
 		}		

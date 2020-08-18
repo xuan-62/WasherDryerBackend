@@ -43,13 +43,20 @@ public class SendingMessageToManager extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		final String managerEmailAddress = "bruceshenqqeq@gmail.com";
-
+		
+		//change the address later
+		final String managerEmailAddress = "bruceshenqqeq@gmail.com";  
+		
+		
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String item_id = input.getString("item_id");
 		String issueType = input.getString("issueType");
 		String issue = input.getString("issue");
-		HttpSession session = request.getSession();
 		String subject = "Error report from user: " + session.getAttribute("user_id");
 		String text = "Issue type: " + issueType + "\nmachine ID: "+ item_id +
 				"\nIssue: " + issue;

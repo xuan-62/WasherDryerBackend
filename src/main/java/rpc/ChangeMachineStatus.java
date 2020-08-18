@@ -43,7 +43,7 @@ public class ChangeMachineStatus extends HttpServlet {
 		
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String newStatus = input.getString("status");
-		String item_id = input.getString("machineId");
+		String item_id = input.getString("item_id");
 		MySQLConnection connection = new MySQLConnection();
 		HttpSession session = request.getSession();
 		String user_id = session.getAttribute("user_id").toString();

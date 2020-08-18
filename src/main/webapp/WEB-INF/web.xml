@@ -14,19 +14,39 @@
   	<servlet-name>Register</servlet-name>
   	<display-name>Register</display-name>
   	<description></description>
-  	<servlet-class>user.Register</servlet-class>
+  	<servlet-class>rpc.Register</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>Login</servlet-name>
   	<display-name>Login</display-name>
   	<description></description>
-  	<servlet-class>user.Login</servlet-class>
+  	<servlet-class>rpc.Login</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>Logout</servlet-name>
   	<display-name>Logout</display-name>
   	<description></description>
-  	<servlet-class>user.Logout</servlet-class>
+  	<servlet-class>rpc.Logout</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ChangeMachineStatus</servlet-name>
+  	<display-name>ChangeMachineStatus</display-name>
+  	<description></description>
+  	<servlet-class>rpc.ChangeMachineStatus</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetAllMachine</servlet-name>
+  	<servlet-class>rpc.GetAllMachine</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>SendingMessageToManager</servlet-name>
+  	<servlet-class>rpc.SendingMessageToManager</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>AddMachine</servlet-name>
+  	<display-name>AddMachine</display-name>
+  	<description></description>
+  	<servlet-class>rpc.AddMachine</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>Test</servlet-name>
@@ -43,5 +63,21 @@
   <servlet-mapping>
   	<servlet-name>Logout</servlet-name>
   	<url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetAllMachine</servlet-name>
+  	<url-pattern>/getAllMachines</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>SendingMessageToManager</servlet-name>
+  	<url-pattern>/sendingMessageToManager</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ChangeMachineStatus</servlet-name>
+  	<url-pattern>/changeMachineStatus</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>AddMachine</servlet-name>
+  	<url-pattern>/addMachine</url-pattern>
   </servlet-mapping>
 </web-app>

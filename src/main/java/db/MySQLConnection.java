@@ -31,13 +31,13 @@ public class MySQLConnection {
 			return "";
 		}
 		String name = "";
-		String sql = "SELECT first_name, last_name FROM users WHERE user_id = ? ";
+		String sql = "select phone_number FROM user WHERE user_id = ? ";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				name = rs.getString("first_name") + " " + rs.getString("last_name");
+				name = rs.getString("phone_number");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -51,7 +51,7 @@ public class MySQLConnection {
 			System.err.println("DB connection failed");
 			return false;
 		}
-		String sql = "SELECT user_id FROM users WHERE user_id = ? AND password = ?";
+		String sql = "SELECT user_id FROM user WHERE user_id = ? AND password = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
@@ -66,21 +66,35 @@ public class MySQLConnection {
 		return false;
 	}
 	//Donghao Feng
-	public boolean addUser(String userId, String password, String phoneNumber) {
+	public boolean addUser(String userId, String phoneNumber, String password) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
-
-		String sql = "INSERT INTO user VALUES (?, ?, ?)";
+		
+		String sql = "SELECT * FROM user WHERE user_id = ? AND phone_number = ?";
+		PreparedStatement preparedStatement;
 		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, userId);
+			preparedStatement.setString(2, phoneNumber);
+			ResultSet rs =preparedStatement.executeQuery();
+			if (rs.next()) {
+				return false;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String sql2 = "insert ignore INTO user VALUES (?, ?, ?)";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql2);
 			statement.setString(1, userId);
 			statement.setString(2, phoneNumber);
 			statement.setString(3, password);
 			statement.executeUpdate();
-
-			return statement.executeUpdate() == 1;
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -108,6 +122,7 @@ public class MySQLConnection {
 				builder.setUserId(rs.getString("user_id"));
 				builder.setCondition(rs.getString("item_condition"));
 				builder.setModel(rs.getString("model"));
+				builder.setBrand(rs.getString("Brand"));
 				Items.add(builder.build());
 			}
 		} catch (SQLException e) {
@@ -117,8 +132,7 @@ public class MySQLConnection {
 	}
 	
 	//Xianli Shen
-	public void addMachine(String item_id, String type, String address, String item_condition,
-			String model, String brand) {
+	public void addMachine(Item item) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return;
@@ -126,12 +140,12 @@ public class MySQLConnection {
 		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model, brand) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, item_id);
-			statement.setString(2, type);
-			statement.setString(3, address);
-			statement.setString(4, item_condition);
-			statement.setString(5, model);
-			statement.setString(6, brand);
+			statement.setString(1, item.getItemId());
+			statement.setString(2, item.getType());
+			statement.setString(3, item.getAddress());
+			statement.setString(4, item.getCondition());
+			statement.setString(5, item.getModel());
+			statement.setString(6, item.getBrand());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -257,6 +271,7 @@ public class MySQLConnection {
 					builder.setUserId(rs.getString("user_id"));
 					builder.setCondition(rs.getString("item_condition"));
 					builder.setModel(rs.getString("model"));
+					builder.setBrand(rs.getString("brand"));
 					reservedItems.add(builder.build());
 				}
 			}

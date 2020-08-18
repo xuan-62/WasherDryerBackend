@@ -55,4 +55,3 @@ public class Register extends HttpServlet {
 		RpcHelper.writeJsonObject(response, obj);
 	}
 }
-

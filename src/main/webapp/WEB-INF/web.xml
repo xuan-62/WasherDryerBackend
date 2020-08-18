@@ -14,19 +14,19 @@
   	<servlet-name>Register</servlet-name>
   	<display-name>Register</display-name>
   	<description></description>
-  	<servlet-class>user.Register</servlet-class>
+  	<servlet-class>rpc.Register</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>Login</servlet-name>
   	<display-name>Login</display-name>
   	<description></description>
-  	<servlet-class>user.Login</servlet-class>
+  	<servlet-class>rpc.Login</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>Logout</servlet-name>
   	<display-name>Logout</display-name>
   	<description></description>
-  	<servlet-class>user.Logout</servlet-class>
+  	<servlet-class>rpc.Logout</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>ChangeMachineStatus</servlet-name>

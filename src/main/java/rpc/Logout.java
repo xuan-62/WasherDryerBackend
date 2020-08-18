@@ -1,4 +1,4 @@
-package user;
+package rpc;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
-
-import rpc.RpcHelper;
 
 
 /**

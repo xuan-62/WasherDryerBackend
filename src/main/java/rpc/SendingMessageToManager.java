@@ -46,12 +46,12 @@ public class SendingMessageToManager extends HttpServlet {
 		final String managerEmailAddress = "bruceshenqqeq@gmail.com";
 
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
-		String machineId = input.getString("machineId");
+		String item_id = input.getString("item_id");
 		String issueType = input.getString("issueType");
 		String issue = input.getString("issue");
 		HttpSession session = request.getSession();
 		String subject = "Error report from user: " + session.getAttribute("user_id");
-		String text = "Issue type: " + issueType + "\nmachine ID: "+ machineId +
+		String text = "Issue type: " + issueType + "\nmachine ID: "+ item_id +
 				"\nIssue: " + issue;
 		SendEmail.sendtext(managerEmailAddress, subject, text);		
 	}

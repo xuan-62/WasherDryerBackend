@@ -74,7 +74,7 @@
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>ChangeMachineStatus</servlet-name>
-  	<url-pattern>/changeMachineStatus</url-pattern>
+  	<url-pattern>/changeStatus</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>AddMachine</servlet-name>

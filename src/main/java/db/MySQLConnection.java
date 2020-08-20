@@ -101,7 +101,6 @@ public class MySQLConnection {
 		return false;
 	}
 
-	
 	//Xianli Shen
 	public Set<Item> getAllMachine() {
 		if (conn == null) {

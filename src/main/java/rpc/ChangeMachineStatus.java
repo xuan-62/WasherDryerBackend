@@ -46,6 +46,7 @@ public class ChangeMachineStatus extends HttpServlet {
 			return;
 		}
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
+		JSONObject obj = new JSONObject();
 		String newStatus = input.getString("status");
 		String item_id = input.getString("item_id");
 		MySQLConnection connection = new MySQLConnection();
@@ -55,10 +56,13 @@ public class ChangeMachineStatus extends HttpServlet {
 			connection.updateCondition(item_id, newStatus);
 			connection.addUsertoItem(item_id, user_id);
 			connection.setReservation(user_id, item_id);
+			obj.put("status", "OK");
 		}else if(newStatus.equals("available")) { 
 			connection.updateCondition(item_id, newStatus);
 			connection.removeReservation(user_id, item_id);
+			obj.put("status", "OK");
 		}		
+		RpcHelper.writeJsonObject(response, obj);
 	}
 
 }

@@ -80,7 +80,7 @@
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>ChangeMachineStatus</servlet-name>
-  	<url-pattern>/changeStatus</url-pattern>
+  	<url-pattern>/changeMachineStatus</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>AddMachine</servlet-name>

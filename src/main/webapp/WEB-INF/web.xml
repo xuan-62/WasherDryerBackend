@@ -48,6 +48,12 @@
   	<description></description>
   	<servlet-class>rpc.AddMachine</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>GetMachinesByUserId</servlet-name>
+  	<display-name>GetMachinesByUserId</display-name>
+  	<description></description>
+  	<servlet-class>rpc.GetMachinesByUserId</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>Test</servlet-name>
   	<url-pattern>/test</url-pattern>
@@ -70,7 +76,7 @@
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>SendingMessageToManager</servlet-name>
-  	<url-pattern>/sendingMessageToManager</url-pattern>
+  	<url-pattern>/report</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>ChangeMachineStatus</servlet-name>
@@ -79,5 +85,9 @@
   <servlet-mapping>
   	<servlet-name>AddMachine</servlet-name>
   	<url-pattern>/addMachine</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetMachinesByUserId</servlet-name>
+  	<url-pattern>/getMachinesByUserId</url-pattern>
   </servlet-mapping>
 </web-app>

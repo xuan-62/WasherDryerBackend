@@ -101,7 +101,6 @@ public class MySQLConnection {
 		return false;
 	}
 
-	
 	//Xianli Shen
 	public Set<Item> getAllMachine() {
 		if (conn == null) {
@@ -152,6 +151,24 @@ public class MySQLConnection {
 		}
 
 	}
+	
+	
+	public void updateCondition(String item_id, String condition) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+		String sql = "UPDATE item SET item_condition=? WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, condition);
+			statement.setString(2, item_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	//Xianli Shen
 	public void addUsertoItem(String item_id, String user_id) {

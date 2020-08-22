@@ -13,8 +13,4 @@ get: washer/getAllMachines [ { "condition": "available", "address": "1", "item_i
 
 post: washer/report Input: {"item_id" : "1"; "issueType" : "a"; "issue": "abc"}
 
-post: washer/changeMachineStatus Input: {"status" : "reserve/available"; "item_id" : "1"}
-
-get: washer/getMachinesByUserId  Outout: {}
-
-
+post: washer/changeMachineStatus Input: {"status" : "reserve/available"; "item_id" : "1"} Output: {"status":"OK"}

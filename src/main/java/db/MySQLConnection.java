@@ -109,7 +109,7 @@ public class MySQLConnection {
 		}
 
 		Set<Item> Items = new HashSet<>();
-		String sql = "SELECT * FROM item";
+		String sql = "select * from (item, reservation)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
@@ -121,7 +121,8 @@ public class MySQLConnection {
 				builder.setUserId(rs.getString("user_id"));
 				builder.setCondition(rs.getString("item_condition"));
 				builder.setModel(rs.getString("model"));
-				builder.setBrand(rs.getString("Brand"));
+				builder.setBrand(rs.getString("brand"));
+				builder.setEndtime(rs.getString("end_time"));
 				Items.add(builder.build());
 			}
 		} catch (SQLException e) {
@@ -273,7 +274,7 @@ public class MySQLConnection {
 		Set<Item> reservedItems = new HashSet<>();
 		Set<String> itemIDs = getReservationIDs(userId);
 
-		String sql = "SELECT * FROM item WHERE item_id = ?";
+		String sql = "SELECT * FROM (item, reservation) WHERE item_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			for (String itemId : itemIDs) {
@@ -289,6 +290,7 @@ public class MySQLConnection {
 					builder.setCondition(rs.getString("item_condition"));
 					builder.setModel(rs.getString("model"));
 					builder.setBrand(rs.getString("brand"));
+					builder.setEndtime(rs.getString("endTime"));
 					reservedItems.add(builder.build());
 				}
 			}

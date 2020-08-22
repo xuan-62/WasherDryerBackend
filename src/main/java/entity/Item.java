@@ -10,6 +10,7 @@ public class Item {
 	private String condition;
 	private String model;
 	private String brand;
+	private String endTime;
 	
 	private Item(ItemBuilder builder) {
 		this.itemId = builder.itemId;
@@ -19,6 +20,7 @@ public class Item {
 		this.condition = builder.condition;
 		this.model = builder.model;
 		this.brand = builder.brand;
+		this.endTime = builder.endTime;
 	}
 
 	
@@ -47,6 +49,9 @@ public class Item {
 	public String getBrand() {
 		return brand;
 	}
+	public String getEndtime() {
+		return endTime;
+	}
 	public void setUserId(String userId) {
 		this.userId = userId;	
 	}
@@ -62,6 +67,7 @@ public class Item {
 		obj.put("condition", condition);
 		obj.put("model", model);
 		obj.put("brand", brand);
+		obj.put("end_time", endTime);
 		return obj;
 	}
 
@@ -73,6 +79,7 @@ public class Item {
 		private String condition;
 		private String model;
 		private String brand;
+		private String endTime;
 		
 		public void setItemId(String itemId) {
 			this.itemId = itemId;
@@ -94,6 +101,9 @@ public class Item {
 		}
 		public void setBrand(String brand) {
 			this.brand = brand;
+		}
+		public void setEndtime(String endTime) {
+			this.endTime = endTime;
 		}
 		public Item build() {
 			return new Item(this);

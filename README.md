@@ -9,7 +9,7 @@ post: washer/login Input： {"user_id" : "11"; "password" : "111" } Output: { "u
 
 get： washer/login(check session valid) Output： { "status": "Invalid Session" }
 
-get: washer/getAllMachines [ { "condition": "available", "address": "1", "item_id": "1", "model": "a", "type": "washer", "brand": "a" } ]
+get: washer/getAllMachines [ { "condition": "available", "address": "1", "item_id": "1", "model": "a", "type": "washer", "brand": "a", "end_time":"2020-08-18 22:11:32" } ]
 
 post: washer/report Input: {"item_id" : "1"; "issueType" : "a"; "issue": "abc"}
 

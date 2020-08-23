@@ -322,7 +322,7 @@ public class MySQLConnection {
 			statement.setString(1, item_id);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				itemId = rs.getString("item_id");
+				itemId = rs.getString("type");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

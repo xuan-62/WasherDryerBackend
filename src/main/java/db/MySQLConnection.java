@@ -113,12 +113,13 @@ public class MySQLConnection {
 		}
 
 		Set<Item> Items = new HashSet<>();
-		String sql = "select * from (item, reservation)";
+		String sql = "select * from item left join reservation on item.item_id = reservation.item_id";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
-			ItemBuilder builder = new ItemBuilder();
+			ItemBuilder builder;
 			while (rs.next()) {
+				builder = new ItemBuilder();
 				builder.setItemId(rs.getString("item_id"));
 				builder.setType(rs.getString("type"));
 				builder.setAddress(rs.getString("address"));

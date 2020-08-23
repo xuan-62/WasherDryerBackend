@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 import db.MySQLConnection;
 
+
+
+
 /**
  * Servlet implementation class ChangeMachineStatus
  */
@@ -53,12 +56,12 @@ public class ChangeMachineStatus extends HttpServlet {
 		String user_id = session.getAttribute("user_id").toString();
 		if(newStatus.equals("reserve")) {
 			String type = connection.getMachineType(item_id);
-			
 			connection.updateCondition(item_id, newStatus);
 			connection.addUsertoItem(item_id, user_id);
-			if(type == "washer") {
+			System.out.println("type: " + type);
+			if(type.equals("washer")) {
 				connection.setReservation(user_id, item_id, 40);
-			}else if(type == "dryer") {
+			}else if(type.equals("dryer")) {
 				connection.setReservation(user_id, item_id, 60);
 			}
 			obj.put("status", "OK");

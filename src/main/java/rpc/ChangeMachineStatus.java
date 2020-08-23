@@ -51,11 +51,16 @@ public class ChangeMachineStatus extends HttpServlet {
 		String item_id = input.getString("item_id");
 		MySQLConnection connection = new MySQLConnection();
 		String user_id = session.getAttribute("user_id").toString();
-		//String user_id = "1111";
 		if(newStatus.equals("reserve")) {
+			String type = connection.getMachineType(item_id);
+			
 			connection.updateCondition(item_id, newStatus);
 			connection.addUsertoItem(item_id, user_id);
-			connection.setReservation(user_id, item_id);
+			if(type == "washer") {
+				connection.setReservation(user_id, item_id, 40);
+			}else if(type == "dryer") {
+				connection.setReservation(user_id, item_id, 60);
+			}
 			obj.put("status", "OK");
 		}else if(newStatus.equals("available")) { 
 			connection.updateCondition(item_id, newStatus);

@@ -274,7 +274,7 @@ public class MySQLConnection {
 		Set<Item> reservedItems = new HashSet<>();
 		Set<String> itemIDs = getReservationIDs(userId);
 
-		String sql = "SELECT * FROM (item, reservation) WHERE item_id = ?";
+		String sql = "SELECT * FROM item, reservation WHERE reservation.item_id = item.item_id AND item.item_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			for (String itemId : itemIDs) {
@@ -290,7 +290,7 @@ public class MySQLConnection {
 					builder.setCondition(rs.getString("item_condition"));
 					builder.setModel(rs.getString("model"));
 					builder.setBrand(rs.getString("brand"));
-					builder.setEndtime(rs.getString("endTime"));
+					builder.setEndtime(rs.getString("end_Time"));
 					reservedItems.add(builder.build());
 				}
 			}

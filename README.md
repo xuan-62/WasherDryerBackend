@@ -13,4 +13,6 @@ get: washer/getAllMachines [ { "condition": "available", "address": "1", "item_i
 
 post: washer/report Input: {"item_id" : "1"; "issueType" : "a"; "issue": "abc"}
 
-post: washer/changeMachineStatus Input: {"status" : "reserve/available"; "item_id" : "1"} Output: {"status":"OK"}
+post: washer/changeMachineStatus Input: {"status" : "reserve/start/available"; "item_id" : "1"} Output: {"status":"OK"}
+
+post: washer/remindUser: {"item_id" : "1"; "user_id" : "1111(the user using this machine)"};

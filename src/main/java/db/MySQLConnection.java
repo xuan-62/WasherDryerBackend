@@ -70,18 +70,18 @@ public class MySQLConnection {
 	}
 
 	// Donghao Feng
-	public boolean addUser(String userId, String phoneNumber, String password) {
+	public boolean addUser(String userId, String email, String password) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
 
-		String sql = "SELECT * FROM user WHERE user_id = ? AND phone_number = ?";
+		String sql = "SELECT * FROM user WHERE user_id = ? AND email = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setString(1, userId);
-			preparedStatement.setString(2, phoneNumber);
+			preparedStatement.setString(2, email);
 			ResultSet rs = preparedStatement.executeQuery();
 			if (rs.next()) {
 				return false;
@@ -95,7 +95,7 @@ public class MySQLConnection {
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql2);
 			statement.setString(1, userId);
-			statement.setString(2, phoneNumber);
+			statement.setString(2, email);
 			statement.setString(3, password);
 			statement.executeUpdate();
 			return true;
@@ -104,7 +104,29 @@ public class MySQLConnection {
 		}
 		return false;
 	}
+	
+	//Xianli Shen
+	public String getEmail(String user_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return null;
+		}
+		String email  = "";
+		try {
+			String sql = "SELECT email FROM user WHERE user_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, user_id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				email = rs.getString("email");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
+		return email;
+	}
+	
 	// Xianli Shen
 	public Set<Item> getAllMachine() {
 		if (conn == null) {
@@ -157,6 +179,30 @@ public class MySQLConnection {
 		}
 	}
 
+	//Xianli Shen
+	public String getCondition(String item_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return null;
+		}
+		String item_condition  = "";
+		try {
+			String sql = "SELECT item_condition FROM item WHERE item_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, item_id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				item_condition = rs.getString("item_condition");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return item_condition;
+	}
+	
+	
+	
 	public void updateCondition(String item_id, String condition) {
 		if (conn == null) {
 			System.err.println("DB connection failed");

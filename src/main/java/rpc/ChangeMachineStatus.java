@@ -11,6 +11,8 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import db.MySQLConnection;
+import notify.Reminder;
+import notify.AutoChangeStatus;
 
 
 
@@ -54,22 +56,35 @@ public class ChangeMachineStatus extends HttpServlet {
 		String item_id = input.getString("item_id");
 		MySQLConnection connection = new MySQLConnection();
 		String user_id = session.getAttribute("user_id").toString();
+
 		if(newStatus.equals("reserve")) {
+			connection.updateCondition(item_id, newStatus);
+			connection.setReservation(user_id, item_id, 15);
+			AutoChangeStatus.autoChangeStatus(user_id, item_id, "available", 15);
+			obj.put("status", "OK");
+		}
+		else if(newStatus.equals("start")) { 
 			String type = connection.getMachineType(item_id);
 			connection.updateCondition(item_id, newStatus);
 			connection.addUsertoItem(item_id, user_id);
-			System.out.println("type: " + type);
+			String email = connection.getEmail(user_id);
 			if(type.equals("washer")) {
+				Reminder.setReminder(email, item_id , user_id, 35);
+				AutoChangeStatus.autoChangeStatus(user_id, item_id, "done", 40);
 				connection.setReservation(user_id, item_id, 40);
 			}else if(type.equals("dryer")) {
+				Reminder.setReminder(email, item_id , user_id, 55);
+				AutoChangeStatus.autoChangeStatus(user_id, item_id, "done", 60);
 				connection.setReservation(user_id, item_id, 60);
 			}
 			obj.put("status", "OK");
-		}else if(newStatus.equals("available")) { 
+		}
+		else if(newStatus.equals("available")) { 
 			connection.updateCondition(item_id, newStatus);
+			connection.removeUserfromItem(item_id);
 			connection.removeReservation(user_id, item_id);
 			obj.put("status", "OK");
-		}		
+		}
 		RpcHelper.writeJsonObject(response, obj);
 	}
 

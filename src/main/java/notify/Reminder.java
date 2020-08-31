@@ -14,7 +14,6 @@ import org.quartz.impl.StdSchedulerFactory;
 public class Reminder {
 	public void setReminder(String to, String item_id, String user_id, double time) {
 
-		to = "bruceshenqqeq@gmail.com";
 		String subject = "Reminder from Washer & Dryer Management App";
 		String text = "Your laundry in machine id: " + item_id + " will complete in 5 minutes.";
 

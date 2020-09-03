@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +26,8 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 	}
-	
-	//Donghao Feng
+
+	// Donghao Feng
 	public String getFullname(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -44,8 +47,8 @@ public class MySQLConnection {
 		}
 		return name;
 	}
-	
-	//Donghao Feng
+
+	// Donghao Feng
 	public boolean verifyLogin(String userId, String password) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -65,20 +68,21 @@ public class MySQLConnection {
 		}
 		return false;
 	}
-	//Donghao Feng
-	public boolean addUser(String userId, String phoneNumber, String password) {
+
+	// Donghao Feng
+	public boolean addUser(String userId, String email, String password) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return false;
 		}
-		
-		String sql = "SELECT * FROM user WHERE user_id = ? AND phone_number = ?";
+
+		String sql = "SELECT * FROM user WHERE user_id = ? AND email = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setString(1, userId);
-			preparedStatement.setString(2, phoneNumber);
-			ResultSet rs =preparedStatement.executeQuery();
+			preparedStatement.setString(2, email);
+			ResultSet rs = preparedStatement.executeQuery();
 			if (rs.next()) {
 				return false;
 			}
@@ -86,12 +90,12 @@ public class MySQLConnection {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		String sql2 = "insert ignore INTO user VALUES (?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql2);
 			statement.setString(1, userId);
-			statement.setString(2, phoneNumber);
+			statement.setString(2, email);
 			statement.setString(3, password);
 			statement.executeUpdate();
 			return true;
@@ -100,8 +104,30 @@ public class MySQLConnection {
 		}
 		return false;
 	}
-
+	
 	//Xianli Shen
+	public String getEmail(String user_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return null;
+		}
+		String email  = "";
+		try {
+			String sql = "SELECT email FROM user WHERE user_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, user_id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				email = rs.getString("email");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return email;
+	}
+	
+	// Xianli Shen
 	public Set<Item> getAllMachine() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -109,12 +135,13 @@ public class MySQLConnection {
 		}
 
 		Set<Item> Items = new HashSet<>();
-		String sql = "select * from (item, reservation)";
+		String sql = "select * from item left join reservation on item.item_id = reservation.item_id";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
-			ItemBuilder builder = new ItemBuilder();
+			ItemBuilder builder;
 			while (rs.next()) {
+				builder = new ItemBuilder();
 				builder.setItemId(rs.getString("item_id"));
 				builder.setType(rs.getString("type"));
 				builder.setAddress(rs.getString("address"));
@@ -130,8 +157,8 @@ public class MySQLConnection {
 		}
 		return Items;
 	}
-	
-	//Xianli Shen
+
+	// Xianli Shen
 	public void addMachine(Item item) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -150,8 +177,30 @@ public class MySQLConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
+
+	//Xianli Shen
+	public String getCondition(String item_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return null;
+		}
+		String item_condition  = "";
+		try {
+			String sql = "SELECT item_condition FROM item WHERE item_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, item_id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				item_condition = rs.getString("item_condition");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return item_condition;
+	}
+	
 	
 	
 	public void updateCondition(String item_id, String condition) {
@@ -169,9 +218,8 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 	}
-	
 
-	//Xianli Shen
+	// Xianli Shen
 	public void addUsertoItem(String item_id, String user_id) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -189,7 +237,7 @@ public class MySQLConnection {
 		}
 	}
 
-	//Xianli Shen
+	// Xianli Shen
 	public void removeUserfromItem(String item_id) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -206,24 +254,34 @@ public class MySQLConnection {
 		}
 	}
 
-	//Xianli Shen
-	public void setReservation(String user_id, String item_id) {
+	// Xianli Shen
+	public void setReservation(String user_id, String item_id, int time) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return;
 		}
-		String sql = "INSERT INTO reservation (user_id, item_id) VALUES (?, ?)";
+		String sql = "INSERT INTO reservation (user_id, item_id, start_time, end_time) VALUES (?, ?, ?, ?)";
 		try {
+
 			PreparedStatement statement = conn.prepareStatement(sql);
+
+			Date start_time = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(start_time);
+			cal.add(Calendar.MINUTE, time);
+			Date end_time = cal.getTime();
+
 			statement.setString(1, user_id);
 			statement.setString(2, item_id);
+			statement.setTimestamp(3, new Timestamp(start_time.getTime()));
+			statement.setTimestamp(4, new Timestamp(end_time.getTime()));
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	//Xianli Shen
+	// Xianli Shen
 	public void removeReservation(String user_id, String item_id) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -240,7 +298,7 @@ public class MySQLConnection {
 		}
 	}
 
-	//Xianli Shen
+	// Xianli Shen
 	public Set<String> getReservationIDs(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -265,7 +323,7 @@ public class MySQLConnection {
 		return Reservations;
 	}
 
-	//Xianli Shen
+	// Xianli Shen
 	public Set<Item> getReservedItems(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -273,8 +331,7 @@ public class MySQLConnection {
 		}
 		Set<Item> reservedItems = new HashSet<>();
 		Set<String> itemIDs = getReservationIDs(userId);
-
-		String sql = "SELECT * FROM (item, reservation) WHERE item_id = ?";
+		String sql = "SELECT * FROM item, reservation WHERE reservation.item_id = item.item_id AND item.item_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			for (String itemId : itemIDs) {
@@ -290,7 +347,7 @@ public class MySQLConnection {
 					builder.setCondition(rs.getString("item_condition"));
 					builder.setModel(rs.getString("model"));
 					builder.setBrand(rs.getString("brand"));
-					builder.setEndtime(rs.getString("endTime"));
+					builder.setEndtime(rs.getString("end_Time"));
 					reservedItems.add(builder.build());
 				}
 			}
@@ -299,7 +356,27 @@ public class MySQLConnection {
 		}
 		return reservedItems;
 	}
-	
+	//Xianli Shen
+	public String getMachineType(String item_id) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return null;
+		}
+		String itemId  = "";
+		try {
+			String sql = "SELECT type FROM item WHERE item_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, item_id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				itemId = rs.getString("type");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return itemId;
+	}
 
 	public void close() {
 		if (conn != null) {

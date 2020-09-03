@@ -13,7 +13,8 @@ import entity.Item.ItemBuilder;
 public class RpcHelper {
 	// Writes a JSONArray to http response.
 		public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException{
-			response.setHeader("Access-Control-Allow-Origin", "http://www.frontend.com:3000");
+			response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");
+			response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setContentType("application/json");
 			response.getWriter().print(array);
@@ -22,7 +23,8 @@ public class RpcHelper {
 
 	              // Writes a JSONObject to http response.
 		public static void writeJsonObject(HttpServletResponse response, JSONObject obj) throws IOException {	
-			response.setHeader("Access-Control-Allow-Origin", "http://www.frontend.com:3000");
+			response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");
+			response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setContentType("application/json");
 			response.getWriter().print(obj);

@@ -35,7 +35,7 @@ public class MySQLTableCreation {
 
 			sql = "CREATE TABLE user ("
 					+ "user_id VARCHAR(255) NOT NULL,"
-					+ "phone_number VARCHAR(255) NOT NULL,"
+					+ "email VARCHAR(255) NOT NULL,"
 					+ "password VARCHAR(255) NOT NULL,"
 					+ "PRIMARY KEY (user_id)"
 					+ ")";
@@ -68,8 +68,8 @@ public class MySQLTableCreation {
 			sql = "CREATE TABLE reservation ("
 					+ "user_id VARCHAR(255) NOT NULL,"
 					+ "item_id VARCHAR(255) NOT NULL,"
-					+ "start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-					+ "end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+					+ "start_time TIMESTAMP NOT NULL,"
+					+ "end_time TIMESTAMP NOT NULL,"
 					+ "PRIMARY KEY (user_id, item_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES user(user_id),"
 					+ "FOREIGN KEY (item_id) REFERENCES item(item_id)"
@@ -78,6 +78,7 @@ public class MySQLTableCreation {
 			
 			// Step 4: insert fake user 1111/3229c1097c00d497a0fd282d586be050
 			sql = "INSERT INTO user VALUES('1112', '98976544', '3229c1097c00d497a0fd282d586be050')";
+			
 			statement.executeUpdate(sql);
 			
 			conn.close();

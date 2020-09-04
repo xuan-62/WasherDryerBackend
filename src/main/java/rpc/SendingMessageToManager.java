@@ -46,10 +46,7 @@ public class SendingMessageToManager extends HttpServlet {
 		
 		//change the address later
 		final String managerEmailAddress = "bruceshenqqeq@gmail.com";  
-		
-		
-		HttpSession session = request.getSession(false);
-		
+		//HttpSession session = request.getSession(false);
 		/*
 		 * if (session == null) { response.setStatus(403); return; }
 		 */
@@ -63,5 +60,9 @@ public class SendingMessageToManager extends HttpServlet {
 		String text = "Issue type: " + issueType + "\nmachine ID: "+ item_id +
 				"\nIssue: " + issue;
 		SendEmail.sendtext(managerEmailAddress, subject, text);		
+		
+		JSONObject obj = new JSONObject();
+		obj.put("status", "OK");
+		RpcHelper.writeJsonObject(response, obj);
 	}
 }

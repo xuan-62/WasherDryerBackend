@@ -62,6 +62,7 @@ public class ChangeMachineStatus extends HttpServlet {
 		if(newStatus.equals("reserve")) {
 			connection.updateCondition(item_id, newStatus);
 			connection.setReservation(user_id, item_id, 15);
+			connection.addUsertoItem(item_id, user_id);
 			AutoChangeStatus.autoChangeStatus(user_id, item_id, "available", 15);
 			obj.put("status", "OK");
 		}

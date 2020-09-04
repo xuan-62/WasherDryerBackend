@@ -33,14 +33,16 @@ public class RemindUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}
+		
+		/*
+		 * if (session == null) { response.setStatus(403); return; }
+		 */
+		
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String item_id = input.getString("item_id");
-		String to_user_id = input.getString("user_id");
-		String from_user_id = session.getAttribute("user_id").toString();
+		String to_user_id = input.getString("to_user_id");
+		String from_user_id = input.getString("user_id");
+		//String from_user_id = session.getAttribute("user_id").toString();
 		MySQLConnection connection = new MySQLConnection();
 		String Email = connection.getEmail(to_user_id);
 		String subject = "Reminder from user: " + from_user_id;

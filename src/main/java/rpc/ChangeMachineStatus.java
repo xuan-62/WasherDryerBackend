@@ -46,16 +46,18 @@ public class ChangeMachineStatus extends HttpServlet {
 		// TODO Auto-generated method stub
 		//String newStatus = request
 		HttpSession session = request.getSession(false);
-		if (session == null) {
-			response.setStatus(403);
-			return;
-		}
+		
+		/*
+		 * if (session == null) { response.setStatus(403); return; }
+		 */
+		
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		JSONObject obj = new JSONObject();
 		String newStatus = input.getString("status");
 		String item_id = input.getString("item_id");
+		String user_id = input.getString("user_id");
 		MySQLConnection connection = new MySQLConnection();
-		String user_id = session.getAttribute("user_id").toString();
+		//String user_id = session.getAttribute("user_id").toString();
 
 		if(newStatus.equals("reserve")) {
 			connection.updateCondition(item_id, newStatus);

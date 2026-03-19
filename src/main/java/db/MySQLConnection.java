@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import entity.Item;
-import entity.Item.ItemBuilder;
 
 public class MySQLConnection implements AutoCloseable {
 	private Connection conn;
@@ -106,16 +105,15 @@ public class MySQLConnection implements AutoCloseable {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				ItemBuilder builder = new ItemBuilder();
-				builder.setItemId(rs.getString("item_id"));
-				builder.setType(rs.getString("type"));
-				builder.setAddress(rs.getString("address"));
-				builder.setUserId(rs.getString("user_id"));
-				builder.setCondition(rs.getString("item_condition"));
-				builder.setModel(rs.getString("model"));
-				builder.setBrand(rs.getString("brand"));
-				builder.setEndtime(rs.getString("end_time"));
-				items.add(builder.build());
+				items.add(new Item(
+						rs.getString("item_id"),
+						rs.getString("type"),
+						rs.getString("address"),
+						rs.getString("user_id"),
+						rs.getString("item_condition"),
+						rs.getString("model"),
+						rs.getString("brand"),
+						rs.getString("end_time")));
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -127,12 +125,12 @@ public class MySQLConnection implements AutoCloseable {
 		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model, brand) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, item.getItemId());
-			statement.setString(2, item.getType());
-			statement.setString(3, item.getAddress());
-			statement.setString(4, item.getCondition());
-			statement.setString(5, item.getModel());
-			statement.setString(6, item.getBrand());
+			statement.setString(1, item.itemId());
+			statement.setString(2, item.type());
+			statement.setString(3, item.address());
+			statement.setString(4, item.condition());
+			statement.setString(5, item.model());
+			statement.setString(6, item.brand());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -244,16 +242,15 @@ public class MySQLConnection implements AutoCloseable {
 				statement.setString(1, itemId);
 				ResultSet rs = statement.executeQuery();
 				if (rs.next()) {
-					ItemBuilder builder = new ItemBuilder();
-					builder.setItemId(rs.getString("item_id"));
-					builder.setType(rs.getString("type"));
-					builder.setAddress(rs.getString("address"));
-					builder.setUserId(rs.getString("user_id"));
-					builder.setCondition(rs.getString("item_condition"));
-					builder.setModel(rs.getString("model"));
-					builder.setBrand(rs.getString("brand"));
-					builder.setEndtime(rs.getString("end_Time"));
-					reservedItems.add(builder.build());
+					reservedItems.add(new Item(
+							rs.getString("item_id"),
+							rs.getString("type"),
+							rs.getString("address"),
+							rs.getString("user_id"),
+							rs.getString("item_condition"),
+							rs.getString("model"),
+							rs.getString("brand"),
+							rs.getString("end_Time")));
 				}
 			}
 		} catch (SQLException e) {

@@ -15,12 +15,8 @@ public class RpcHelper {
 	private static final String CORS_ORIGIN = AppConfig.get("CORS_ORIGIN", "http://localhost:3000");
 	// Writes a JSONArray to http response.
 		public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException{
-<<<<<<< HEAD
 			response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");
 			response.setHeader("Access-Control-Allow-Origin", CORS_ORIGIN);
-=======
-			response.setHeader("Access-Control-Allow-Origin", "http://www.frontend.com:3000");
->>>>>>> 7a0d1f1a36e88eaf1986f9f5ef6066168c4b7587
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setContentType("application/json");
 			response.getWriter().print(array);
@@ -29,12 +25,8 @@ public class RpcHelper {
 
 	              // Writes a JSONObject to http response.
 		public static void writeJsonObject(HttpServletResponse response, JSONObject obj) throws IOException {	
-<<<<<<< HEAD
 			response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");
 			response.setHeader("Access-Control-Allow-Origin", CORS_ORIGIN);
-=======
-			response.setHeader("Access-Control-Allow-Origin", "http://www.frontend.com:3000");
->>>>>>> 7a0d1f1a36e88eaf1986f9f5ef6066168c4b7587
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setContentType("application/json");
 			response.getWriter().print(obj);

@@ -127,8 +127,9 @@ WasherDryerBackend/
 │       │   │   ├── MySQLTableCreation.java   # One-time DB schema setup
 │       │   │   └── test.java                # Ad-hoc DB test
 │       │   ├── entity/
-│       │   │   └── Item.java                # Machine model (builder pattern)
+│       │   │   └── Machine.java             # Machine value object (record)
 │       │   ├── notify/
+│       │   │   ├── AutoChangeStatus.java    # Quartz job: auto-transitions machine status
 │       │   │   ├── Reminder.java            # Quartz job: sends email when reservation ends
 │       │   │   └── SendEmail.java           # JavaMail email sender
 │       │   └── rpc/
@@ -139,6 +140,7 @@ WasherDryerBackend/
 │       │       ├── Login.java               # POST/GET /login
 │       │       ├── Logout.java              # GET  /logout
 │       │       ├── Register.java            # POST /register
+│       │       ├── RemindUser.java          # POST /remindUser
 │       │       ├── RpcHelper.java           # Shared JSON request/response helpers
 │       │       ├── SendingMessageToManager.java # POST /report
 │       │       └── Test.java                # Smoke-test servlet
@@ -206,3 +208,4 @@ All endpoints are prefixed with `/washer`.
 | `commons-io 2.14.0` | HTTP request body reading |
 | `tomcat-catalina 10.1.52` | Servlet API (Jakarta EE 10) |
 | `dotenv-java 2.3.2` | `.env` file loading |
+| `logback-classic 1.5.12` | Structured logging (rolling file + console) |

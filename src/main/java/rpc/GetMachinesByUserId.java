@@ -12,25 +12,12 @@ import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 
 import db.MySQLConnection;
-import entity.Item;
+import entity.Machine;
 
-/**
- * Servlet implementation class GetMachinesByUserId
- */
 public class GetMachinesByUserId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetMachinesByUserId() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
@@ -38,25 +25,22 @@ public class GetMachinesByUserId extends HttpServlet {
 			return;
 		}
 		String userId = session.getAttribute("user_id").toString();
-		Set<Item> items;
+		Set<Machine> items;
 		try (MySQLConnection connection = new MySQLConnection()) {
-			items = connection.getReservedItems(userId);
+			items = connection.getReservedMachines(userId);
 		} catch (Exception e) {
 			RpcHelper.writeError(response, 500, "Internal server error");
 			return;
 		}
 		JSONArray array = new JSONArray();
-		for (Item item : items) {
+		for (Machine item : items) {
 			array.put(item.toJSONObject());
 		}
 		RpcHelper.writeJsonArray(response, array);
 	}
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }

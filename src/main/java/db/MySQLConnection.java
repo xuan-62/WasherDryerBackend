@@ -76,7 +76,7 @@ public class MySQLConnection {
 			return false;
 		}
 
-		String sql = "SELECT * FROM user WHERE user_id = ? ";
+		String sql = "SELECT * FROM user WHERE user_id = ? AND email = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = conn.prepareStatement(sql);

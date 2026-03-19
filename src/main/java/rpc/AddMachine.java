@@ -2,10 +2,10 @@ package rpc;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;  
 import org.json.JSONObject;
@@ -39,16 +39,15 @@ public class AddMachine extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		MySQLConnection connection = new MySQLConnection();
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		Item item = RpcHelper.AddMachine(input);
-		
-		connection.addMachine(item);
-		connection.close();
-		
-		RpcHelper.writeJsonObject(response, new JSONObject().put("result","sucess"));
-		
+		try (MySQLConnection connection = new MySQLConnection()) {
+			connection.addMachine(item);
+		} catch (Exception e) {
+			RpcHelper.writeError(response, 500, "Internal server error");
+			return;
+		}
+		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "success"));
 	}
 
 }

@@ -8,11 +8,11 @@ A Java-based RESTful backend for managing laundry machine reservations. Users ca
 
 | Tool | Version |
 |------|---------|
-| Java JDK | 8+ (tested with JDK 25) |
+| Java JDK | 21+ (tested with JDK 25) |
 | MySQL | 5.7+ or AWS RDS MySQL |
 | VSCode | Latest |
 
-> Tomcat 9 and Maven 3 are bundled in `tomcat/` and `maven/` — no separate installs needed.
+> Tomcat 10.1 and Maven 3 are bundled in `tomcat/` and `maven/` — no separate installs needed.
 
 **Required environment variables** (set once at user level, VSCode tasks depend on them):
 
@@ -113,7 +113,7 @@ WasherDryerBackend/
 ├── pom.xml                          # Maven build & dependencies
 ├── .env                             # Local credentials (gitignored — never commit)
 ├── .env.example                     # Credential template (committed)
-├── tomcat/                          # Bundled Tomcat 9 server (gitignored)
+├── tomcat/                          # Bundled Tomcat 10.1 server (gitignored)
 ├── maven/                           # Bundled Maven 3 build tool (gitignored)
 ├── .vscode/
 │   ├── launch.json                  # F5 debug config — attaches to Tomcat
@@ -199,9 +199,10 @@ All endpoints are prefixed with `/washer`.
 
 | Library | Purpose |
 |---------|---------|
-| `mysql-connector-java 8.0.18` | MySQL JDBC driver |
-| `javax.mail 1.6.2` | Email notifications |
-| `quartz 2.3.0` | Scheduled reminder jobs |
-| `org.json 20190722` | JSON parsing/serialization |
-| `commons-io 2.7` | HTTP request body reading |
-| `tomcat-catalina 9.0.30` | Servlet API |
+| `com.mysql:mysql-connector-j 9.2.0` | MySQL JDBC driver |
+| `org.eclipse.angus:angus-mail 2.0.3` | Email notifications (Jakarta Mail) |
+| `quartz 2.3.2` | Scheduled reminder jobs |
+| `org.json 20251224` | JSON parsing/serialization |
+| `commons-io 2.14.0` | HTTP request body reading |
+| `tomcat-catalina 10.1.52` | Servlet API (Jakarta EE 10) |
+| `dotenv-java 2.3.2` | `.env` file loading |

@@ -4,10 +4,10 @@ import java.io.IOException;
 //import java.sql.Connection;
 //import java.sql.PreparedStatement;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -44,14 +44,16 @@ public class Register extends HttpServlet {
 		String phonenumber = input.getString("phone_number");
 		String password = input.getString("password");
 
-		MySQLConnection connection = new MySQLConnection();
-		JSONObject obj = new JSONObject();
-		if (connection.addUser(userId, phonenumber, password)) {
-			obj.put("status", "OK");
-		} else {
-			obj.put("status", "User Already Exists");
+		try (MySQLConnection connection = new MySQLConnection()) {
+			JSONObject obj = new JSONObject();
+			if (connection.addUser(userId, phonenumber, password)) {
+				obj.put("status", "OK");
+			} else {
+				obj.put("status", "User Already Exists");
+			}
+			RpcHelper.writeJsonObject(response, obj);
+		} catch (Exception e) {
+			RpcHelper.writeError(response, 500, "Internal server error");
 		}
-		connection.close();
-		RpcHelper.writeJsonObject(response, obj);
 	}
 }

@@ -1,5 +1,6 @@
 package notify;
 
+import java.time.Instant;
 import java.util.Date;
 
 import org.quartz.JobBuilder;
@@ -26,8 +27,7 @@ public class Reminder {
 			jobDetail.getJobDataMap().put("subject", subject);
 			jobDetail.getJobDataMap().put("text", text);
 
-			Date startDate = new Date();
-			startDate.setTime((long) (startDate.getTime() + (time * 60 * 1000)));
+			Date startDate = Date.from(Instant.now().plusMillis((long) (time * 60 * 1000)));
 
 			Trigger trigger = TriggerBuilder.newTrigger().withIdentity(item_id, user_id).startAt(startDate).build();
 
@@ -35,7 +35,7 @@ public class Reminder {
 			System.out.println("--------scheduler start ! ------------");
 			scheduler.start();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Failed to schedule reminder", e);
 		}
 
 	}

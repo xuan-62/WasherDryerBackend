@@ -3,14 +3,13 @@ package rpc;
 import java.io.IOException;
 import java.util.Set;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import db.MySQLConnection;
 import entity.Item;
@@ -33,18 +32,23 @@ public class GetMachinesByUserId extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		MySQLConnection connection = new MySQLConnection();
 		HttpSession session = request.getSession(false);
+		if (session == null) {
+			RpcHelper.writeError(response, 403, "Invalid session");
+			return;
+		}
 		String userId = session.getAttribute("user_id").toString();
-		Set<Item> items = connection.getReservedItems(userId);
-		connection.close();
-		
+		Set<Item> items;
+		try (MySQLConnection connection = new MySQLConnection()) {
+			items = connection.getReservedItems(userId);
+		} catch (Exception e) {
+			RpcHelper.writeError(response, 500, "Internal server error");
+			return;
+		}
 		JSONArray array = new JSONArray();
 		for (Item item : items) {
-			JSONObject obj = item.toJSONObject();
-			array.put(obj);
+			array.put(item.toJSONObject());
 		}
-		
 		RpcHelper.writeJsonArray(response, array);
 	}
 	/**

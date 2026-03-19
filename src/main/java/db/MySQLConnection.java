@@ -76,11 +76,12 @@ public class MySQLConnection {
 			return false;
 		}
 
-		String sql = "SELECT * FROM user WHERE user_id = ? ";
+		String sql = "SELECT * FROM user WHERE user_id = ? AND email = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setString(1, userId);
+			preparedStatement.setString(2, email);
 			ResultSet rs = preparedStatement.executeQuery();
 			if (rs.next()) {
 				return false;

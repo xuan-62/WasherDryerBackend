@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import notify.SendEmail;
+import config.AppConfig;
 //import org.json.JSONObject;
 
 /**
@@ -44,8 +45,7 @@ public class SendingMessageToManager extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		//change the address later
-		final String managerEmailAddress = "bruceshenqqeq@gmail.com";  
+		final String managerEmailAddress = AppConfig.get("MANAGER_EMAIL");
 		
 		
 		HttpSession session = request.getSession(false);

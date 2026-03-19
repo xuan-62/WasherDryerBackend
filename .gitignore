@@ -1,5 +1,29 @@
-/.metadata/
+# Local dev tools (bundled, not shared)
+/tomcat/
+/maven/
+
+# Build output
 /target/
-target/m2e-wtp/web-resources/META-INF/maven/laiproject/washer/pom.properties
-target/m2e-wtp/web-resources/META-INF/maven/laiproject/washer/pom.properties
-target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
+*.war
+*.class
+
+# Eclipse
+/.metadata/
+.classpath
+.project
+.settings/
+Servers/
+bin/
+target/m2e-wtp/
+
+# VSCode (settings.json is machine-specific — tasks and launch are shared)
+.vscode/settings.json
+
+# Claude Code
+.claude/
+
+# Environment / credentials
+.env
+
+# macOS
+.DS_Store

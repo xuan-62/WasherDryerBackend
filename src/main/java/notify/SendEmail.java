@@ -9,10 +9,11 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import config.AppConfig;
+
 public class SendEmail implements Job {
-	// Sender's email ID and password
-	private static final String from = "laigroup33@gmail.com";
-	private static final String pwd = "laiproject";
+	private static final String from = AppConfig.get("SMTP_FROM");
+	private static final String pwd = AppConfig.get("SMTP_PASSWORD");
 
 	// args: recipient's email, mail subject and text
 	public static boolean sendtext(String to, String subject, String text) {

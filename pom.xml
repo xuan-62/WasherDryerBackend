@@ -15,9 +15,9 @@
 	<url>http://www.example.com</url>
 
 	<properties>
-		<javaVersion>1.8</javaVersion>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<javaVersion>11</javaVersion>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
 
@@ -31,12 +31,12 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-catalina</artifactId>
-			<version>9.0.30</version>
+			<version>9.0.113</version>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20190722</version>
+			<version>20251224</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.7</version>
+			<version>2.14.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.activation</groupId>
@@ -61,7 +61,12 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>2.3.0</version>
+			<version>2.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>dotenv-java</artifactId>
+			<version>2.3.2</version>
 		</dependency>
 
 

@@ -1,0 +1,10 @@
+rpc\GetMachinesByUserId.class
+rpc\Test.class
+entity\Item.class
+rpc\Logout.class
+rpc\GetAllMachine.class
+rpc\Register.class
+notify\Reminder.class
+rpc\Login.class
+entity\Item$1.class
+entity\Item$ItemBuilder.class

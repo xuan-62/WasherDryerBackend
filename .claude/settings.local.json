@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find . -maxdepth 2 -type f -name *.md -o -name *.txt -o -name pom.xml -o -name build.gradle)"
-    ]
-  }
-}

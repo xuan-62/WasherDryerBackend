@@ -16,6 +16,9 @@ target/m2e-wtp/
 .vscode/settings.json
 .vscode/tasks.json
 
+# Claude Code
+.claude/
+
 # Environment / credentials
 .env
 

@@ -1,3 +1,7 @@
+# Local dev tools (bundled, not shared)
+/tomcat/
+/maven/
+
 # Build output
 /target/
 *.war
@@ -12,9 +16,8 @@ Servers/
 bin/
 target/m2e-wtp/
 
-# VSCode
+# VSCode (settings.json is machine-specific — tasks and launch are shared)
 .vscode/settings.json
-.vscode/tasks.json
 
 # Claude Code
 .claude/

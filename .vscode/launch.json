@@ -1,11 +1,20 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "WasherDryerBackend (Tomcat)",
-      "request": "launch",
-      "envFile": "${workspaceFolder}/.env"
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "test",
+            "request": "launch",
+            "mainClass": "db.test",
+            "projectName": "washer"
+        },
+        {
+            "type": "java",
+            "name": "Debug on Tomcat",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 8000,
+            "preLaunchTask": "Start Tomcat (Debug)"
+        }
+    ]
 }

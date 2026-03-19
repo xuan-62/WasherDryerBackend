@@ -8,25 +8,33 @@ A Java-based RESTful backend for managing laundry machine reservations. Users ca
 
 | Tool | Version |
 |------|---------|
-| Java JDK | 8 |
-| Apache Maven | 3.6+ |
-| Apache Tomcat | 9.0 |
+| Java JDK | 8+ (tested with JDK 25) |
 | MySQL | 5.7+ or AWS RDS MySQL |
 | VSCode | Latest |
 
-**Recommended VSCode Extensions:**
+> Tomcat 9 and Maven 3 are bundled in `tomcat/` and `maven/` — no separate installs needed.
+
+**Required environment variables** (set once at user level, VSCode tasks depend on them):
+
+```powershell
+# PowerShell — run once, then restart VSCode
+[System.Environment]::SetEnvironmentVariable('JAVA_HOME', 'C:\Path\To\Your\JDK', 'User')
+```
+
+To find your JDK path: `(Get-Command java).Source` — strip `\bin\java.exe` from the result.
+
+**Required VSCode Extensions:**
 
 | Extension | Purpose |
 |-----------|---------|
 | Extension Pack for Java (Microsoft) | Language support, debugger, Maven |
-| Community Server Connectors (Red Hat) | Run/debug Tomcat from VSCode |
 | XML (Red Hat) | Syntax support for `web.xml`, `pom.xml` |
 
 ---
 
 ## Setup
 
-### 1. Configure Database Credentials
+### 1. Configure Environment Variables
 
 Copy the env template and fill in your values:
 
@@ -42,36 +50,59 @@ DB_USER=your-username        # required
 DB_PASS=your-password        # required
 DB_PORT=3306                 # optional, defaults to 3306
 DB_NAME=washerproject        # optional, defaults to washerproject
+
+SMTP_FROM=your@gmail.com     # required for email notifications
+SMTP_PASSWORD=your-app-password # required — use a Gmail App Password, not your account password
+
+MANAGER_EMAIL=manager@example.com  # receives machine issue reports
+CORS_ORIGIN=http://localhost:3000  # allowed frontend origin
 ```
 
 > `.env` is gitignored — never commit it. See [.env.example](.env.example) for the template.
 
-VSCode loads `.env` automatically via [.vscode/launch.json](.vscode/launch.json) when you run the app.
-
 ### 2. Initialize the Database
 
-Run `MySQLTableCreation.java` to create all tables and seed a test user:
+Run via the VSCode task **Terminal → Run Task → Init DB**, or manually:
 
 ```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="db.MySQLTableCreation"
+./maven/bin/mvn compile
+./maven/bin/mvn exec:java -Dexec.mainClass="db.MySQLTableCreation"
 ```
 
 This creates four tables: `user`, `background`, `item`, and `reservation`.
 
 ### 3. Build
 
+Press `Ctrl+Shift+B` in VSCode, or run manually:
+
 ```bash
-mvn clean package
+./maven/bin/mvn clean package -DskipTests
 ```
 
 This produces `target/washer.war`.
 
-### 4. Deploy to Tomcat
+### 4. Run & Debug
 
-Copy `target/washer.war` to your Tomcat `webapps/` directory, then start Tomcat. The context root is `/washer`.
+Press `F5` — VSCode will:
+1. Start Tomcat with debug port 8000 open
+2. Wait until the server is ready
+3. Auto-attach the Java debugger
 
-Alternatively, use the **Community Server Connectors** extension in VSCode to start/stop Tomcat directly from the editor.
+Set breakpoints anywhere before or after pressing `F5`. To stop Tomcat, run **Terminal → Run Task → Stop Tomcat**.
+
+The app is available at `http://localhost:8080/washer`.
+
+---
+
+## VSCode Tasks
+
+| Task | Shortcut | Description |
+|------|----------|-------------|
+| Build | `Ctrl+Shift+B` | `mvn clean package -DskipTests` |
+| Build (with tests) | Run Task menu | `mvn clean package` |
+| Start Tomcat (Debug) | triggered by `F5` | Starts Tomcat with JDWP debug agent on port 8000 |
+| Stop Tomcat | Run Task menu | Shuts down the local Tomcat instance |
+| Init DB | Run Task menu | Creates DB tables and seeds test data |
 
 ---
 
@@ -82,8 +113,11 @@ WasherDryerBackend/
 ├── pom.xml                          # Maven build & dependencies
 ├── .env                             # Local credentials (gitignored — never commit)
 ├── .env.example                     # Credential template (committed)
+├── tomcat/                          # Bundled Tomcat 9 server (gitignored)
+├── maven/                           # Bundled Maven 3 build tool (gitignored)
 ├── .vscode/
-│   └── launch.json                  # VSCode launch config — loads .env automatically
+│   ├── launch.json                  # F5 debug config — attaches to Tomcat
+│   └── tasks.json                   # Build, Start/Stop Tomcat, Init DB tasks
 ├── src/
 │   └── main/
 │       ├── java/

@@ -1,0 +1,84 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "${workspaceFolder}/maven/bin/mvn clean package -DskipTests",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$javac"
+        },
+        {
+            "label": "Build (with tests)",
+            "type": "shell",
+            "command": "${workspaceFolder}/maven/bin/mvn clean package",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$javac"
+        },
+        {
+            "label": "Start Tomcat (Debug)",
+            "type": "shell",
+            "command": "set JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 && \"${workspaceFolder}\\tomcat\\bin\\catalina.bat\" run",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/C"]
+                }
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "tomcat",
+                "pattern": {
+                    "regexp": "^$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Using CATALINA_BASE",
+                    "endsPattern": "Server startup in"
+                }
+            }
+        },
+        {
+            "label": "Stop Tomcat",
+            "type": "shell",
+            "command": "\"${workspaceFolder}\\tomcat\\bin\\catalina.bat\" stop",
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/C"]
+                }
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Init DB",
+            "type": "shell",
+            "command": "${workspaceFolder}/maven/bin/mvn exec:java -Dexec.mainClass=db.MySQLTableCreation",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

@@ -4,7 +4,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "${workspaceFolder}/maven/bin/mvn clean package -DskipTests",
+            "command": "${workspaceFolder}/maven/bin/mvn clean package",
             "group": {
                 "kind": "build",
                 "isDefault": true

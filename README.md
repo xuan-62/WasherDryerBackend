@@ -9,12 +9,12 @@ A Java-based RESTful backend for managing laundry machine reservations. Users ca
 | Tool | Version |
 |------|---------|
 | Java JDK | 21+ (tested with JDK 25) |
-| MySQL | 5.7+ or AWS RDS MySQL |
+| MySQL | 8.0+ or AWS RDS MySQL (local dev: use Docker Compose) |
 | VSCode | Latest |
 
-> Tomcat 10.1 and Maven 3 are bundled in `tomcat/` and `maven/` — no separate installs needed.
+> Tomcat 10.1 and Maven 3 are bundled in `tomcat/` and `maven/` — no separate installs needed for local dev.
 
-**Required environment variables** (set once at user level, VSCode tasks depend on them):
+**Required environment variable** (set once, VSCode tasks depend on it):
 
 ```powershell
 # PowerShell — run once, then restart VSCode
@@ -32,17 +32,23 @@ To find your JDK path: `(Get-Command java).Source` — strip `\bin\java.exe` fro
 
 ---
 
-## Setup
+## Quick Start (local dev)
 
-### 1. Configure Environment Variables
+### 1. Run setup script
 
-Copy the env template and fill in your values:
+Downloads Maven and Tomcat into the project folder and creates `.env` from the template:
 
 ```bash
-cp .env.example .env
+# macOS / Linux
+./setup.sh
+
+# Windows
+setup.bat
 ```
 
-Edit `.env`:
+### 2. Configure credentials
+
+Edit `.env` with your values:
 
 ```bash
 DB_HOST=your-rds-endpoint    # required
@@ -52,45 +58,66 @@ DB_PORT=3306                 # optional, defaults to 3306
 DB_NAME=washerproject        # optional, defaults to washerproject
 
 SMTP_FROM=your@gmail.com     # required for email notifications
-SMTP_PASSWORD=your-app-password # required — use a Gmail App Password, not your account password
+SMTP_PASSWORD=your-app-password # required — use a Gmail App Password
 
 MANAGER_EMAIL=manager@example.com  # receives machine issue reports
 CORS_ORIGIN=http://localhost:3000  # allowed frontend origin
 ```
 
-> `.env` is gitignored — never commit it. See [.env.example](.env.example) for the template.
-
-### 2. Initialize the Database
-
-Run via the VSCode task **Terminal → Run Task → Init DB**, or manually:
-
-```bash
-./maven/bin/mvn compile
-./maven/bin/mvn exec:java -Dexec.mainClass="db.MySQLTableCreation"
-```
-
-This creates four tables: `user`, `background`, `item`, and `reservation`.
+> `.env` is gitignored — never commit it.
 
 ### 3. Build
 
-Press `Ctrl+Shift+B` in VSCode, or run manually:
-
 ```bash
-./maven/bin/mvn clean package -DskipTests
+./maven/bin/mvn clean package
 ```
 
-This produces `target/washer.war`.
+Or press `Ctrl+Shift+B` in VSCode.
 
 ### 4. Run & Debug
 
 Press `F5` — VSCode will:
 1. Start Tomcat with debug port 8000 open
-2. Wait until the server is ready
+2. Wait until server is ready
 3. Auto-attach the Java debugger
 
-Set breakpoints anywhere before or after pressing `F5`. To stop Tomcat, run **Terminal → Run Task → Stop Tomcat**.
+On first startup, **Flyway automatically creates all database tables** — no manual `Init DB` step needed.
 
 The app is available at `http://localhost:8080/washer`.
+
+To stop Tomcat: **Terminal → Run Task → Stop Tomcat**.
+
+---
+
+## Docker Compose (full stack)
+
+Spin up MySQL + app with a single command — no external database needed:
+
+```bash
+docker compose up --build
+```
+
+The app is available at `http://localhost:8080/washer`. Flyway runs migrations on startup automatically.
+
+To stop:
+
+```bash
+docker compose down
+```
+
+> The MySQL data volume persists between restarts. Use `docker compose down -v` to wipe it.
+
+---
+
+## CI/CD
+
+GitHub Actions runs on every push to `master`/`development` and on pull requests to `master`:
+
+1. Spins up MySQL 8 as a service container
+2. Builds with `mvn clean package` (includes all tests)
+3. Uploads `washer.war` as a build artifact
+
+See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
@@ -98,11 +125,25 @@ The app is available at `http://localhost:8080/washer`.
 
 | Task | Shortcut | Description |
 |------|----------|-------------|
-| Build | `Ctrl+Shift+B` | `mvn clean package -DskipTests` |
-| Build (with tests) | Run Task menu | `mvn clean package` |
+| Build | `Ctrl+Shift+B` | `mvn clean package` (includes tests) |
+| Build (with tests) | Run Task menu | Same as Build |
 | Start Tomcat (Debug) | triggered by `F5` | Starts Tomcat with JDWP debug agent on port 8000 |
 | Stop Tomcat | Run Task menu | Shuts down the local Tomcat instance |
-| Init DB | Run Task menu | Creates DB tables and seeds test data |
+
+> The old **Init DB** task is replaced by Flyway — schema migrations run automatically on app startup.
+
+---
+
+## Database Migrations
+
+Schema is managed by [Flyway](https://flywaydb.org/). Migration scripts live in:
+
+```
+src/main/resources/db/migration/
+  V1__create_schema.sql   ← initial schema
+```
+
+Flyway runs automatically when the app starts (via `AppContextListener`). To add a schema change, create `V2__description.sql` — Flyway applies only new versions.
 
 ---
 
@@ -113,41 +154,60 @@ WasherDryerBackend/
 ├── pom.xml                          # Maven build & dependencies
 ├── .env                             # Local credentials (gitignored — never commit)
 ├── .env.example                     # Credential template (committed)
-├── tomcat/                          # Bundled Tomcat 10.1 server (gitignored)
-├── maven/                           # Bundled Maven 3 build tool (gitignored)
+├── setup.sh / setup.bat             # One-time setup: download Maven + Tomcat
+├── Dockerfile                       # Multi-stage: Maven build → Tomcat runtime
+├── docker-compose.yml               # MySQL + app for local full-stack dev
+├── tomcat/                          # Bundled Tomcat 10.1 (gitignored)
+├── maven/                           # Bundled Maven 3 (gitignored)
+├── .github/
+│   └── workflows/ci.yml             # GitHub Actions: build + test on push/PR
 ├── .vscode/
 │   ├── launch.json                  # F5 debug config — attaches to Tomcat
-│   └── tasks.json                   # Build, Start/Stop Tomcat, Init DB tasks
-├── src/
-│   └── main/
-│       ├── java/
-│       │   ├── db/
-│       │   │   ├── MySQLConnection.java      # All SQL queries (users, items, reservations)
-│       │   │   ├── MySQLDBUtil.java          # DB connection URL / credentials
-│       │   │   ├── MySQLTableCreation.java   # One-time DB schema setup
-│       │   │   └── test.java                # Ad-hoc DB test
-│       │   ├── entity/
-│       │   │   └── Machine.java             # Machine value object (record)
-│       │   ├── notify/
-│       │   │   ├── AutoChangeStatus.java    # Quartz job: auto-transitions machine status
-│       │   │   ├── Reminder.java            # Quartz job: sends email when reservation ends
-│       │   │   └── SendEmail.java           # JavaMail email sender
-│       │   └── rpc/
-│       │       ├── AddMachine.java          # POST /addMachine
-│       │       ├── ChangeMachineStatus.java # POST /changeMachineStatus
-│       │       ├── GetAllMachine.java       # GET  /getAllMachines
-│       │       ├── GetMachinesByUserId.java # GET  /getMachinesByUserId
-│       │       ├── Login.java               # POST/GET /login
-│       │       ├── Logout.java              # GET  /logout
-│       │       ├── Register.java            # POST /register
-│       │       ├── RemindUser.java          # POST /remindUser
-│       │       ├── RpcHelper.java           # Shared JSON request/response helpers
-│       │       ├── SendingMessageToManager.java # POST /report
-│       │       └── Test.java                # Smoke-test servlet
-│       └── webapp/
-│           ├── index.jsp
-│           └── WEB-INF/
-│               └── web.xml                  # Servlet mappings
+│   └── tasks.json                   # Build, Start/Stop Tomcat tasks
+└── src/
+    ├── main/
+    │   ├── java/
+    │   │   ├── config/
+    │   │   │   └── AppConfig.java            # dotenv-java wrapper
+    │   │   ├── db/
+    │   │   │   ├── AppContextListener.java   # Runs Flyway migrations on startup
+    │   │   │   ├── MySQLConnection.java      # All SQL queries
+    │   │   │   ├── MySQLDBUtil.java          # DB connection URL / credentials
+    │   │   │   └── MySQLTableCreation.java   # Legacy DB reset utility (manual use only)
+    │   │   ├── entity/
+    │   │   │   └── Machine.java              # Machine value object (record)
+    │   │   ├── notify/
+    │   │   │   ├── AutoChangeStatus.java     # Quartz job: auto-transitions machine status
+    │   │   │   ├── NewStatus.java            # Quartz job: executes the status change
+    │   │   │   ├── Reminder.java             # Quartz job: sends email when reservation ends
+    │   │   │   └── SendEmail.java            # JavaMail email sender
+    │   │   └── rpc/
+    │   │       ├── AddMachine.java           # POST /addMachine
+    │   │       ├── ChangeMachineStatus.java  # POST /changeMachineStatus
+    │   │       ├── GetAllMachine.java        # GET  /getAllMachines
+    │   │       ├── GetMachinesByUserId.java  # GET  /getMachinesByUserId
+    │   │       ├── Login.java                # POST/GET /login
+    │   │       ├── Logout.java               # GET  /logout
+    │   │       ├── Register.java             # POST /register
+    │   │       ├── RemindUser.java           # POST /remindUser
+    │   │       ├── RpcHelper.java            # Shared JSON response helpers
+    │   │       ├── SendingMessageToManager.java # POST /report
+    │   │       └── Test.java                 # Smoke-test servlet
+    │   ├── resources/
+    │   │   ├── db/migration/
+    │   │   │   └── V1__create_schema.sql     # Flyway: initial schema
+    │   │   └── logback.xml                   # Logging config (console + rolling file)
+    │   └── webapp/
+    │       └── WEB-INF/
+    │           └── web.xml                   # Servlet mappings + Flyway listener
+    └── test/
+        └── java/
+            ├── db/
+            │   └── PasswordHashingTest.java  # BCrypt hash/verify round-trip
+            ├── entity/
+            │   └── MachineTest.java          # Machine record construction & JSON output
+            └── rpc/
+                └── RpcHelperTest.java        # buildMachine() from JSON input
 ```
 
 ---
@@ -191,7 +251,8 @@ All endpoints are prefixed with `/washer`.
   "condition": "available",
   "model": "ModelX",
   "brand": "BrandY",
-  "end_time": "2024-01-01 12:00:00"
+  "user_id": null,
+  "end_time": null
 }
 ```
 
@@ -210,3 +271,4 @@ All endpoints are prefixed with `/washer`.
 | `dotenv-java 2.3.2` | `.env` file loading |
 | `logback-classic 1.5.12` | Structured logging (rolling file + console) |
 | `jbcrypt 0.4` | BCrypt password hashing |
+| `flyway-core 10.21.0` | Versioned database migrations |

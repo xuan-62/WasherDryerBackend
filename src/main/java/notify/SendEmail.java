@@ -1,18 +1,22 @@
 package notify;
 
-import java.util.*;
-import jakarta.mail.*;
-import jakarta.mail.internet.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Properties;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import config.AppConfig;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 public class SendEmail implements Job {
 	private static final Logger logger = LoggerFactory.getLogger(SendEmail.class);
@@ -30,6 +34,7 @@ public class SendEmail implements Job {
 		properties.put("mail.smtp.auth", "true");
 
 		Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
+                        @Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(from, pwd);
 			}
@@ -65,6 +70,10 @@ public class SendEmail implements Job {
 		return true;
 	}
 
+    public static String getFrom() {
+        return from;
+    }
+
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		// TODO Auto-generated method stub
@@ -75,6 +84,7 @@ public class SendEmail implements Job {
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
 		Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
+                        @Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(from, pwd);
 			}

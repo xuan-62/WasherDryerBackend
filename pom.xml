@@ -15,9 +15,8 @@
 	<url>http://www.example.com</url>
 
 	<properties>
-		<javaVersion>21</javaVersion>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.release>21</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 

@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,23 +13,10 @@ import org.json.JSONObject;
 
 import db.MySQLConnection;
 
-/**
- * Servlet implementation class Login
- */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Login() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		if (session == null) {
@@ -48,9 +36,7 @@ public class Login extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String userId = input.getString("user_id");
@@ -71,5 +57,4 @@ public class Login extends HttpServlet {
 			RpcHelper.writeError(response, 500, "Internal server error");
 		}
 	}
-
 }

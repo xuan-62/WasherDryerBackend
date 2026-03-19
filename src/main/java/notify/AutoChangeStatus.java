@@ -1,5 +1,6 @@
 package notify;
 
+import java.time.Instant;
 import java.util.Date;
 
 import org.quartz.JobBuilder;
@@ -22,14 +23,13 @@ public class AutoChangeStatus {
 			jobDetail.getJobDataMap().put("item_id", item_id);
 			jobDetail.getJobDataMap().put("new_status", new_status);
 
-			Date startDate = new Date();
-			startDate.setTime((long) (startDate.getTime() + (time * 60 * 1000)));
+			Date startDate = Date.from(Instant.now().plusMillis((long) (time * 60 * 1000)));
 			Trigger trigger = TriggerBuilder.newTrigger().withIdentity(item_id, new_status).startAt(startDate).build();
 			scheduler.scheduleJob(jobDetail, trigger);
 			System.out.println("--------scheduler start ! ------------");
 			scheduler.start();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Failed to schedule status change", e);
 		}
 	}
 }

@@ -2,7 +2,7 @@ package rpc;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +33,12 @@ public class RpcHelper {
 
 		}
 		
-		// Convert a JSON object to Item object
+		public static void writeError(HttpServletResponse response, int status, String message) throws IOException {
+		response.setStatus(status);
+		writeJsonObject(response, new JSONObject().put("error", message));
+	}
+
+	// Convert a JSON object to Item object
 		public static Item AddMachine(JSONObject machine) {
 			ItemBuilder builder = new ItemBuilder();
 			builder.setItemId(machine.getString("item_id"));

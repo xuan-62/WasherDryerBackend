@@ -1,47 +1,30 @@
 package db;
 
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MySQLTableCreation {
 	// Run this as Java application to reset the database.
 	public static void main(String[] args) {
-		try {
-			// Step 1 Connect to MySQL.
-			System.out.println("Connecting to " + MySQLDBUtil.URL);
-			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-			Connection conn = DriverManager.getConnection(MySQLDBUtil.URL);
+		System.out.println("Connecting to " + MySQLDBUtil.URL);
+		try (Connection conn = DriverManager.getConnection(MySQLDBUtil.URL);
+			 Statement statement = conn.createStatement()) {
 
-			if (conn == null) {
-				return;
-			}
-			
-			// Step 2 Drop tables in case they exist.
-			Statement statement = conn.createStatement();
-			
-			String sql = "DROP TABLE IF EXISTS reservation";
-			statement.executeUpdate(sql);
-			
-			sql = "DROP TABLE IF EXISTS item";
-			statement.executeUpdate(sql);
-			
-			sql = "DROP TABLE IF EXISTS background";
-			statement.executeUpdate(sql);
-			
-			sql = "DROP TABLE IF EXISTS user";
-			statement.executeUpdate(sql);
-			
+			statement.executeUpdate("DROP TABLE IF EXISTS reservation");
+			statement.executeUpdate("DROP TABLE IF EXISTS item");
+			statement.executeUpdate("DROP TABLE IF EXISTS background");
+			statement.executeUpdate("DROP TABLE IF EXISTS user");
 
-			sql = "CREATE TABLE user ("
+			statement.executeUpdate("CREATE TABLE user ("
 					+ "user_id VARCHAR(255) NOT NULL,"
 					+ "email VARCHAR(255) NOT NULL,"
 					+ "password VARCHAR(255) NOT NULL,"
 					+ "PRIMARY KEY (user_id)"
-					+ ")";
-			statement.executeUpdate(sql);
-			
-			sql = "CREATE TABLE background ("
+					+ ")");
+
+			statement.executeUpdate("CREATE TABLE background ("
 					+ "user_id VARCHAR(255) NOT NULL,"
 					+ "about_me VARCHAR(255),"
 					+ "first_name VARCHAR(255),"
@@ -49,10 +32,9 @@ public class MySQLTableCreation {
 					+ "email VARCHAR(255),"
 					+ "PRIMARY KEY (user_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES user(user_id)"
-					+ ")";
-			statement.executeUpdate(sql);
+					+ ")");
 
-			sql = "CREATE TABLE item ("
+			statement.executeUpdate("CREATE TABLE item ("
 					+ "item_id VARCHAR(255) NOT NULL,"
 					+ "type VARCHAR(255),"
 					+ "address VARCHAR(255),"
@@ -62,10 +44,9 @@ public class MySQLTableCreation {
 					+ "brand VARCHAR(255),"
 					+ "PRIMARY KEY (item_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES user(user_id)"
-					+ ")";
-			statement.executeUpdate(sql);
-			
-			sql = "CREATE TABLE reservation ("
+					+ ")");
+
+			statement.executeUpdate("CREATE TABLE reservation ("
 					+ "user_id VARCHAR(255) NOT NULL,"
 					+ "item_id VARCHAR(255) NOT NULL,"
 					+ "start_time TIMESTAMP NOT NULL,"
@@ -73,19 +54,13 @@ public class MySQLTableCreation {
 					+ "PRIMARY KEY (user_id, item_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES user(user_id),"
 					+ "FOREIGN KEY (item_id) REFERENCES item(item_id)"
-					+ ")";
-			statement.executeUpdate(sql);
-			
-			// Step 4: insert fake user 1111/3229c1097c00d497a0fd282d586be050
-			sql = "INSERT INTO user VALUES('1112', '98976544', '3229c1097c00d497a0fd282d586be050')";
-			
-			statement.executeUpdate(sql);
-			
-			conn.close();
-			System.out.println("Import done successfully");
+					+ ")");
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			statement.executeUpdate("INSERT INTO user VALUES('1112', '98976544', '3229c1097c00d497a0fd282d586be050')");
+
+			System.out.println("Import done successfully");
+		} catch (SQLException e) {
+			throw new RuntimeException("Database setup failed", e);
 		}
 	}
 }

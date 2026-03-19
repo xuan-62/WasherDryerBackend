@@ -1,11 +1,11 @@
 package rpc;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -51,41 +51,41 @@ public class ChangeMachineStatus extends HttpServlet {
 			return;
 		}
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
-		JSONObject obj = new JSONObject();
 		String newStatus = input.getString("status");
 		String item_id = input.getString("item_id");
-		MySQLConnection connection = new MySQLConnection();
 		String user_id = session.getAttribute("user_id").toString();
-
-		if(newStatus.equals("reserve")) {
-			connection.updateCondition(item_id, newStatus);
-			connection.setReservation(user_id, item_id, 15);
-			AutoChangeStatus.autoChangeStatus(user_id, item_id, "available", 15);
-			obj.put("status", "OK");
-		}
-		else if(newStatus.equals("start")) { 
-			String type = connection.getMachineType(item_id);
-			connection.updateCondition(item_id, newStatus);
-			connection.addUsertoItem(item_id, user_id);
-			String email = connection.getEmail(user_id);
-			if(type.equals("washer")) {
-				Reminder.setReminder(email, item_id , user_id, 35);
-				AutoChangeStatus.autoChangeStatus(user_id, item_id, "done", 40);
-				connection.setReservation(user_id, item_id, 40);
-			}else if(type.equals("dryer")) {
-				Reminder.setReminder(email, item_id , user_id, 55);
-				AutoChangeStatus.autoChangeStatus(user_id, item_id, "done", 60);
-				connection.setReservation(user_id, item_id, 60);
+		try (MySQLConnection connection = new MySQLConnection()) {
+			JSONObject obj = new JSONObject();
+			if (newStatus.equals("reserve")) {
+				connection.updateCondition(item_id, newStatus);
+				connection.setReservation(user_id, item_id, 15);
+				AutoChangeStatus.autoChangeStatus(user_id, item_id, "available", 15);
+				obj.put("status", "OK");
+			} else if (newStatus.equals("start")) {
+				String type = connection.getMachineType(item_id);
+				connection.updateCondition(item_id, newStatus);
+				connection.addUsertoItem(item_id, user_id);
+				String email = connection.getEmail(user_id);
+				if (type.equals("washer")) {
+					Reminder.setReminder(email, item_id, user_id, 35);
+					AutoChangeStatus.autoChangeStatus(user_id, item_id, "done", 40);
+					connection.setReservation(user_id, item_id, 40);
+				} else if (type.equals("dryer")) {
+					Reminder.setReminder(email, item_id, user_id, 55);
+					AutoChangeStatus.autoChangeStatus(user_id, item_id, "done", 60);
+					connection.setReservation(user_id, item_id, 60);
+				}
+				obj.put("status", "OK");
+			} else if (newStatus.equals("available")) {
+				connection.updateCondition(item_id, newStatus);
+				connection.removeUserfromItem(item_id);
+				connection.removeReservation(user_id, item_id);
+				obj.put("status", "OK");
 			}
-			obj.put("status", "OK");
+			RpcHelper.writeJsonObject(response, obj);
+		} catch (Exception e) {
+			RpcHelper.writeError(response, 500, "Internal server error");
 		}
-		else if(newStatus.equals("available")) { 
-			connection.updateCondition(item_id, newStatus);
-			connection.removeUserfromItem(item_id);
-			connection.removeReservation(user_id, item_id);
-			obj.put("status", "OK");
-		}
-		RpcHelper.writeJsonObject(response, obj);
 	}
 
 }

@@ -1,8 +1,8 @@
 package notify;
 
 import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -25,7 +25,7 @@ public class SendEmail implements Job {
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
 
-		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+		Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(from, pwd);
 			}
@@ -57,7 +57,7 @@ public class SendEmail implements Job {
 			System.out.println("Sent message successfully....");
 
 		} catch (MessagingException mex) {
-			mex.printStackTrace();
+			throw new RuntimeException("Failed to send email", mex);
 		}
 		return true;
 	}
@@ -71,7 +71,7 @@ public class SendEmail implements Job {
 		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
-		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+		Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(from, pwd);
 			}
@@ -95,7 +95,7 @@ public class SendEmail implements Job {
 			Transport.send(message);
 
 		} catch (MessagingException mex) {
-			mex.printStackTrace();
+			throw new RuntimeException("Failed to send email", mex);
 		}
 
 	}

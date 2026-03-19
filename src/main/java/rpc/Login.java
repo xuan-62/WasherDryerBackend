@@ -46,6 +46,7 @@ public class Login extends HttpServlet {
 			if (connection.verifyLogin(userId, password)) {
 				HttpSession session = request.getSession();
 				session.setAttribute("user_id", userId);
+				session.setAttribute("role", connection.getRole(userId));
 				session.setMaxInactiveInterval(600);
 				obj.put("status", "OK").put("user_id", userId).put("name", connection.getFullname(userId));
 			} else {

@@ -3,6 +3,7 @@ package rpc;
 import java.io.IOException;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +13,10 @@ import entity.Machine;
 
 public class RpcHelper {
 	private static final String CORS_ORIGIN = AppConfig.get("CORS_ORIGIN", "http://localhost:3000");
+
+	public static boolean isAdmin(HttpSession session) {
+		return "admin".equals(session.getAttribute("role"));
+	}
 
 	public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException {
 		response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");

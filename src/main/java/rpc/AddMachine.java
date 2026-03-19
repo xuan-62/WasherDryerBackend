@@ -12,12 +12,18 @@ import org.json.JSONObject;
 
 import db.MySQLConnection;
 import entity.Machine;
+import jakarta.servlet.http.HttpSession;
 
 public class AddMachine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		if (session == null || !RpcHelper.isAdmin(session)) {
+			RpcHelper.writeError(response, 403, "Admin access required");
+			return;
+		}
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		Machine item = RpcHelper.buildMachine(input);
 		try (MySQLConnection connection = new MySQLConnection()) {

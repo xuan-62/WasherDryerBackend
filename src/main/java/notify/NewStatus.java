@@ -28,7 +28,9 @@ public class NewStatus implements Job {
 
 			} else if (new_status.equals("done")) // set working item to done
 			{
-				connection.updateCondition(item_id, new_status);
+				if (current_status.equals("start")) {
+					connection.updateCondition(item_id, new_status);
+				}
 			}
 		}
 

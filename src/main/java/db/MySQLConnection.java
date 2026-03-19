@@ -70,7 +70,7 @@ public class MySQLConnection implements AutoCloseable {
 			throw new RuntimeException(e);
 		}
 
-		String sql2 = "insert ignore INTO user VALUES (?, ?, ?)";
+		String sql2 = "INSERT IGNORE INTO user (user_id, email, password, role) VALUES (?, ?, ?, 'user')";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql2);
 			statement.setString(1, userId);
@@ -81,6 +81,21 @@ public class MySQLConnection implements AutoCloseable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public String getRole(String userId) {
+		String sql = "SELECT role FROM user WHERE user_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return rs.getString("role");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return "user";
 	}
 
 	public String getEmail(String user_id) {

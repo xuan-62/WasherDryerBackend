@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -289,6 +291,69 @@ public class MySQLConnection implements AutoCloseable {
 			throw new RuntimeException(e);
 		}
 		return type;
+	}
+
+	public void updateDeviceHeartbeat(String deviceId) {
+		String sql = "UPDATE item SET last_heartbeat = NOW() WHERE device_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, deviceId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<String[]> getStaleDevices(int thresholdMinutes) {
+		List<String[]> stale = new ArrayList<>();
+		String sql = "SELECT item_id, device_id, item_condition FROM item "
+				+ "WHERE device_id IS NOT NULL "
+				+ "AND (last_heartbeat IS NULL OR last_heartbeat < NOW() - INTERVAL ? MINUTE)";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, thresholdMinutes);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				stale.add(new String[]{
+						rs.getString("item_id"),
+						rs.getString("device_id"),
+						rs.getString("item_condition")
+				});
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return stale;
+	}
+
+	public String getItemIdByDeviceId(String deviceId) {
+		String sql = "SELECT item_id FROM item WHERE device_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, deviceId);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return rs.getString("item_id");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return null;
+	}
+
+	public String getReservedUserForItem(String itemId) {
+		String sql = "SELECT user_id FROM reservation WHERE item_id = ? ORDER BY start_time DESC LIMIT 1";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, itemId);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return rs.getString("user_id");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return null;
 	}
 
 	@Override

@@ -1,0 +1,2 @@
+ALTER TABLE `item`
+    ADD COLUMN last_heartbeat TIMESTAMP NULL DEFAULT NULL;

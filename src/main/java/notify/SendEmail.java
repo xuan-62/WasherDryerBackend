@@ -4,6 +4,9 @@ import java.util.*;
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -12,6 +15,7 @@ import org.quartz.JobExecutionException;
 import config.AppConfig;
 
 public class SendEmail implements Job {
+	private static final Logger logger = LoggerFactory.getLogger(SendEmail.class);
 	private static final String from = AppConfig.get("SMTP_FROM");
 	private static final String pwd = AppConfig.get("SMTP_PASSWORD");
 
@@ -51,10 +55,9 @@ public class SendEmail implements Job {
 			// Now set the actual message
 			message.setText(text);
 
-			System.out.println("sending...");
-			// Send message
+			logger.info("Sending email to {}", to);
 			Transport.send(message);
-			System.out.println("Sent message successfully....");
+			logger.info("Email sent successfully to {}", to);
 
 		} catch (MessagingException mex) {
 			throw new RuntimeException("Failed to send email", mex);
@@ -77,8 +80,8 @@ public class SendEmail implements Job {
 			}
 
 		});
-		// Used to debug SMTP issues
-		session.setDebug(true);
+		// Used to debug SMTP issues — enable by setting logger level to DEBUG
+		session.setDebug(logger.isDebugEnabled());
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(from));

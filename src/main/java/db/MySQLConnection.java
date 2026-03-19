@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import entity.Machine;
 
 public class MySQLConnection implements AutoCloseable {
@@ -40,14 +42,13 @@ public class MySQLConnection implements AutoCloseable {
 	}
 
 	public boolean verifyLogin(String userId, String password) {
-		String sql = "SELECT user_id FROM user WHERE user_id = ? AND password = ?";
+		String sql = "SELECT password FROM user WHERE user_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
-			statement.setString(2, password);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				return true;
+				return BCrypt.checkpw(password, rs.getString("password"));
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -74,7 +75,7 @@ public class MySQLConnection implements AutoCloseable {
 			PreparedStatement statement = conn.prepareStatement(sql2);
 			statement.setString(1, userId);
 			statement.setString(2, email);
-			statement.setString(3, password);
+			statement.setString(3, BCrypt.hashpw(password, BCrypt.gensalt()));
 			statement.executeUpdate();
 			return true;
 		} catch (SQLException e) {

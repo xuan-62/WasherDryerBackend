@@ -209,3 +209,4 @@ All endpoints are prefixed with `/washer`.
 | `tomcat-catalina 10.1.52` | Servlet API (Jakarta EE 10) |
 | `dotenv-java 2.3.2` | `.env` file loading |
 | `logback-classic 1.5.12` | Structured logging (rolling file + console) |
+| `jbcrypt 0.4` | BCrypt password hashing |

@@ -127,7 +127,7 @@ WasherDryerBackend/
 │       │   │   ├── MySQLTableCreation.java   # One-time DB schema setup
 │       │   │   └── test.java                # Ad-hoc DB test
 │       │   ├── entity/
-│       │   │   └── Item.java                # Machine model (builder pattern)
+│       │   │   └── Machine.java             # Machine value object (record)
 │       │   ├── notify/
 │       │   │   ├── AutoChangeStatus.java    # Quartz job: auto-transitions machine status
 │       │   │   ├── Reminder.java            # Quartz job: sends email when reservation ends

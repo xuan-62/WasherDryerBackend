@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 
 import db.MySQLConnection;
-import entity.Item;
+import entity.Machine;
 
 public class GetMachinesByUserId extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -25,15 +25,15 @@ public class GetMachinesByUserId extends HttpServlet {
 			return;
 		}
 		String userId = session.getAttribute("user_id").toString();
-		Set<Item> items;
+		Set<Machine> items;
 		try (MySQLConnection connection = new MySQLConnection()) {
-			items = connection.getReservedItems(userId);
+			items = connection.getReservedMachines(userId);
 		} catch (Exception e) {
 			RpcHelper.writeError(response, 500, "Internal server error");
 			return;
 		}
 		JSONArray array = new JSONArray();
-		for (Item item : items) {
+		for (Machine item : items) {
 			array.put(item.toJSONObject());
 		}
 		RpcHelper.writeJsonArray(response, array);

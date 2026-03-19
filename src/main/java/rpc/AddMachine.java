@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import db.MySQLConnection;
-import entity.Item;
+import entity.Machine;
 
 public class AddMachine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +19,7 @@ public class AddMachine extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
-		Item item = RpcHelper.AddMachine(input);
+		Machine item = RpcHelper.buildMachine(input);
 		try (MySQLConnection connection = new MySQLConnection()) {
 			connection.addMachine(item);
 		} catch (Exception e) {

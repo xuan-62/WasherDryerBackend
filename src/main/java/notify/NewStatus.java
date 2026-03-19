@@ -22,7 +22,7 @@ public class NewStatus implements Job {
 				if (current_status.equals("reserve")) {
 					connection.updateCondition(item_id, new_status);
 					connection.removeReservation(user_id, item_id);
-					connection.removeUserfromItem(item_id);
+					connection.removeUserfromMachine(item_id);
 				} else {
 				}
 

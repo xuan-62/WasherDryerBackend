@@ -11,14 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 
 import db.MySQLConnection;
-import entity.Item;
+import entity.Machine;
 
 public class GetAllMachine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Set<Item> items;
+		Set<Machine> items;
 		try (MySQLConnection connection = new MySQLConnection()) {
 			items = connection.getAllMachine();
 		} catch (Exception e) {
@@ -26,7 +26,7 @@ public class GetAllMachine extends HttpServlet {
 			return;
 		}
 		JSONArray array = new JSONArray();
-		for (Item item : items) {
+		for (Machine item : items) {
 			array.put(item.toJSONObject());
 		}
 		RpcHelper.writeJsonArray(response, array);

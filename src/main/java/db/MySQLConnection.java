@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import entity.Item;
+import entity.Machine;
 
 public class MySQLConnection implements AutoCloseable {
 	private Connection conn;
@@ -98,14 +98,14 @@ public class MySQLConnection implements AutoCloseable {
 		return email;
 	}
 
-	public Set<Item> getAllMachine() {
-		Set<Item> items = new HashSet<>();
+	public Set<Machine> getAllMachine() {
+		Set<Machine> items = new HashSet<>();
 		String sql = "select * from item left join reservation on item.item_id = reservation.item_id";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				items.add(new Item(
+				items.add(new Machine(
 						rs.getString("item_id"),
 						rs.getString("type"),
 						rs.getString("address"),
@@ -121,7 +121,7 @@ public class MySQLConnection implements AutoCloseable {
 		return items;
 	}
 
-	public void addMachine(Item item) {
+	public void addMachine(Machine item) {
 		String sql = "INSERT IGNORE INTO item (item_id, type, address, item_condition, model, brand) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
@@ -165,7 +165,7 @@ public class MySQLConnection implements AutoCloseable {
 		}
 	}
 
-	public void addUsertoItem(String item_id, String user_id) {
+	public void addUsertoMachine(String item_id, String user_id) {
 		String sql = "UPDATE item SET user_id=? WHERE item_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
@@ -177,7 +177,7 @@ public class MySQLConnection implements AutoCloseable {
 		}
 	}
 
-	public void removeUserfromItem(String item_id) {
+	public void removeUserfromMachine(String item_id) {
 		String sql = "UPDATE item SET user_id = NULL WHERE item_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
@@ -232,8 +232,8 @@ public class MySQLConnection implements AutoCloseable {
 		return reservations;
 	}
 
-	public Set<Item> getReservedItems(String userId) {
-		Set<Item> reservedItems = new HashSet<>();
+	public Set<Machine> getReservedMachines(String userId) {
+		Set<Machine> reservedMachines = new HashSet<>();
 		Set<String> itemIDs = getReservationIDs(userId);
 		String sql = "SELECT * FROM item, reservation WHERE reservation.item_id = item.item_id AND item.item_id = ?";
 		try {
@@ -242,7 +242,7 @@ public class MySQLConnection implements AutoCloseable {
 				statement.setString(1, itemId);
 				ResultSet rs = statement.executeQuery();
 				if (rs.next()) {
-					reservedItems.add(new Item(
+					reservedMachines.add(new Machine(
 							rs.getString("item_id"),
 							rs.getString("type"),
 							rs.getString("address"),
@@ -256,7 +256,7 @@ public class MySQLConnection implements AutoCloseable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		return reservedItems;
+		return reservedMachines;
 	}
 
 	public String getMachineType(String item_id) {

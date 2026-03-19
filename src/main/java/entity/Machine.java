@@ -2,7 +2,7 @@ package entity;
 
 import org.json.JSONObject;
 
-public record Item(
+public record Machine(
 		String itemId,
 		String type,
 		String address,

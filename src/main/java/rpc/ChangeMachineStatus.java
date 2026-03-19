@@ -39,7 +39,7 @@ public class ChangeMachineStatus extends HttpServlet {
 			} else if (newStatus.equals("start")) {
 				String type = connection.getMachineType(item_id);
 				connection.updateCondition(item_id, newStatus);
-				connection.addUsertoItem(item_id, user_id);
+				connection.addUsertoMachine(item_id, user_id);
 				String email = connection.getEmail(user_id);
 				if (type.equals("washer")) {
 					Reminder.setReminder(email, item_id, user_id, 35);
@@ -53,7 +53,7 @@ public class ChangeMachineStatus extends HttpServlet {
 				obj.put("status", "OK");
 			} else if (newStatus.equals("available")) {
 				connection.updateCondition(item_id, newStatus);
-				connection.removeUserfromItem(item_id);
+				connection.removeUserfromMachine(item_id);
 				connection.removeReservation(user_id, item_id);
 				obj.put("status", "OK");
 			}

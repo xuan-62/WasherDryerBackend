@@ -15,6 +15,7 @@ public class RpcHelper {
 	private static final String CORS_ORIGIN = AppConfig.get("CORS_ORIGIN", "http://localhost:3000");
 	// Writes a JSONArray to http response.
 		public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException{
+<<<<<<< HEAD
 			response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");
 			response.setHeader("Access-Control-Allow-Origin", CORS_ORIGIN);
 			response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -25,6 +26,7 @@ public class RpcHelper {
 
 	              // Writes a JSONObject to http response.
 		public static void writeJsonObject(HttpServletResponse response, JSONObject obj) throws IOException {	
+<<<<<<< HEAD
 			response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS");
 			response.setHeader("Access-Control-Allow-Origin", CORS_ORIGIN);
 			response.setHeader("Access-Control-Allow-Credentials", "true");

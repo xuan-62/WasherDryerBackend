@@ -81,6 +81,7 @@ public class MySQLConnection {
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setString(1, userId);
+			preparedStatement.setString(2, email);
 			ResultSet rs = preparedStatement.executeQuery();
 			if (rs.next()) {
 				return false;

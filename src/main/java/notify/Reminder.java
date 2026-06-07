@@ -1,6 +1,10 @@
 package notify;
 
+import java.time.Instant;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -12,6 +16,8 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 public class Reminder {
+	private static final Logger logger = LoggerFactory.getLogger(Reminder.class);
+
 	public static void setReminder(String to, String item_id, String user_id, double time) {
 
 		String subject = "Reminder from Washer & Dryer Management App";
@@ -26,16 +32,15 @@ public class Reminder {
 			jobDetail.getJobDataMap().put("subject", subject);
 			jobDetail.getJobDataMap().put("text", text);
 
-			Date startDate = new Date();
-			startDate.setTime((long) (startDate.getTime() + (time * 60 * 1000)));
+			Date startDate = Date.from(Instant.now().plusMillis((long) (time * 60 * 1000)));
 
 			Trigger trigger = TriggerBuilder.newTrigger().withIdentity(item_id, user_id).startAt(startDate).build();
 
 			scheduler.scheduleJob(jobDetail, trigger);
-			System.out.println("--------scheduler start ! ------------");
+			logger.info("Reminder scheduler started for item {} user {}", item_id, user_id);
 			scheduler.start();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Failed to schedule reminder", e);
 		}
 
 	}

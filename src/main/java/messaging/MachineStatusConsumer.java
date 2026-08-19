@@ -1,5 +1,7 @@
 package messaging;
 
+import java.io.IOException;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,7 @@ public class MachineStatusConsumer implements AutoCloseable {
 			try {
 				processEvent(message);
 				channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-			} catch (Exception e) {
+			} catch (IOException | RuntimeException e) {
 				logger.error("Failed to process event: {}", message, e);
 				channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, true);
 			}

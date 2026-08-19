@@ -34,4 +34,5 @@ public class AddMachine extends HttpServlet {
 		}
 		RpcHelper.writeJsonObject(response, new JSONObject().put("result", "success"));
 	}
+
 }

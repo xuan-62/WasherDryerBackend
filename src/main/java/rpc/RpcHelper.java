@@ -2,14 +2,13 @@ package rpc;
 
 import java.io.IOException;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import config.AppConfig;
 import entity.Machine;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class RpcHelper {
 	private static final String CORS_ORIGIN = AppConfig.get("CORS_ORIGIN", "http://localhost:3000");

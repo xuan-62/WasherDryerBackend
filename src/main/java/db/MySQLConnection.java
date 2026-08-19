@@ -15,7 +15,7 @@ import java.util.Set;
 import org.mindrot.jbcrypt.BCrypt;
 
 import entity.Machine;
-
+ 
 public class MySQLConnection implements AutoCloseable {
 	private Connection conn;
 

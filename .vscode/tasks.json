@@ -3,12 +3,8 @@
     "tasks": [
         {
             "label": "Build",
-            "type": "shell",
-<<<<<<< HEAD
-            "command": "${workspaceFolder}/maven/bin/mvn clean package",
-=======
-            "command": "${workspaceFolder}/maven/bin/mvn clean package -DskipTests",
->>>>>>> a25b709a36888d589c49a39fa16239e9435ec6fe
+            "type": "shell", 
+            "command": "${workspaceFolder}/maven/bin/mvn clean package -DskipTests", 
             "group": {
                 "kind": "build",
                 "isDefault": true
